@@ -1,0 +1,1243 @@
+EVA2_4_INNER_JOIN
+
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': *********
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 61
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > \use northwind
+Default schema set to `northwind`.
+Fetching table and column names from `northwind` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc orderdetails;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| OrderID   | int(11)       | NO   | PRI | NULL    |       |
+| ProductID | int(11)       | NO   | PRI | NULL    |       |
+| UnitPrice | decimal(10,4) | NO   |     | 0.0000  |       |
+| Quantity  | smallint(2)   | NO   |     | 1       |       |
+| Discount  | double(8,0)   | NO   |     | 0       |       |
++-----------+---------------+------+-----+---------+-------+
+5 rows in set (0.0016 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc products;
++-----------------+---------------+------+-----+---------+----------------+
+| Field           | Type          | Null | Key | Default | Extra          |
++-----------------+---------------+------+-----+---------+----------------+
+| ProductID       | int(11)       | NO   | PRI | NULL    | auto_increment |
+| ProductName     | varchar(40)   | NO   | MUL | NULL    |                |
+| SupplierID      | int(11)       | YES  | MUL | NULL    |                |
+| CategoryID      | int(11)       | YES  | MUL | NULL    |                |
+| QuantityPerUnit | varchar(20)   | YES  |     | NULL    |                |
+| UnitPrice       | decimal(10,4) | YES  |     | 0.0000  |                |
+| UnitsInStock    | smallint(2)   | YES  |     | 0       |                |
+| UnitsOnOrder    | smallint(2)   | YES  |     | 0       |                |
+| ReorderLevel    | smallint(2)   | YES  |     | 0       |                |
+| Discontinued    | bit(1)        | NO   |     | b'0'    |                |
++-----------------+---------------+------+-----+---------+----------------+
+10 rows in set (0.0015 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.orderid, b.productname, a.unityprice, a.quantity
+                                         ...
+                                         ... ;
+ERROR: 1109 (42S02): Unknown table 'a' in field list
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.orderid, b.productname, a.unitprice, a.quantity, (a.unitprice * a.quantity) as subtotal
+                                         ... from orderdetails a
+                                         ... inner join products b
+                                         ... on a.productid = b.productid limit 20;
++---------+----------------------------------+-----------+----------+-----------+
+| orderid | productname                      | unitprice | quantity | subtotal  |
++---------+----------------------------------+-----------+----------+-----------+
+|   10248 | Queso Cabrales                   |   14.0000 |       12 |  168.0000 |
+|   10248 | Singaporean Hokkien Fried Mee    |    9.8000 |       10 |   98.0000 |
+|   10248 | Mozzarella di Giovanni           |   34.8000 |        5 |  174.0000 |
+|   10249 | Tofu                             |   18.6000 |        9 |  167.4000 |
+|   10249 | Manjimup Dried Apples            |   42.4000 |       40 | 1696.0000 |
+|   10250 | Jack's New England Clam Chowder  |    7.7000 |       10 |   77.0000 |
+|   10250 | Manjimup Dried Apples            |   42.4000 |       35 | 1484.0000 |
+|   10250 | Louisiana Fiery Hot Pepper Sauce |   16.8000 |       15 |  252.0000 |
+|   10251 | Gustaf's Knckebrd                |   16.8000 |        6 |  100.8000 |
+|   10251 | Ravioli Angelo                   |   15.6000 |       15 |  234.0000 |
+|   10251 | Louisiana Fiery Hot Pepper Sauce |   16.8000 |       20 |  336.0000 |
+|   10252 | Sir Rodney's Marmalade           |   64.8000 |       40 | 2592.0000 |
+|   10252 | Geitost                          |    2.0000 |       25 |   50.0000 |
+|   10252 | Camembert Pierrot                |   27.2000 |       40 | 1088.0000 |
+|   10253 | Gorgonzola Telino                |   10.0000 |       20 |  200.0000 |
+|   10253 | Chartreuse verte                 |   14.4000 |       42 |  604.8000 |
+|   10253 | Maxilaku                         |   16.0000 |       40 |  640.0000 |
+|   10254 | Guaran Fantstica                 |    3.6000 |       15 |   54.0000 |
+|   10254 | Pt chinois                       |   19.2000 |       21 |  403.2000 |
+|   10254 | Longlife Tofu                    |    8.0000 |       21 |  168.0000 |
++---------+----------------------------------+-----------+----------+-----------+
+20 rows in set (0.0011 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select orderid, productid from orderdetails limit 20;
++---------+-----------+
+| orderid | productid |
++---------+-----------+
+|   10285 |         1 |
+|   10294 |         1 |
+|   10317 |         1 |
+|   10348 |         1 |
+|   10354 |         1 |
+|   10370 |         1 |
+|   10406 |         1 |
+|   10413 |         1 |
+|   10477 |         1 |
+|   10522 |         1 |
+|   10526 |         1 |
+|   10576 |         1 |
+|   10590 |         1 |
+|   10609 |         1 |
+|   10611 |         1 |
+|   10628 |         1 |
+|   10646 |         1 |
+|   10689 |         1 |
+|   10691 |         1 |
+|   10700 |         1 |
++---------+-----------+
+20 rows in set (0.0353 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > show tables;
++----------------------+
+| Tables_in_northwind  |
++----------------------+
+| account              |
+| categories           |
+| customercustomerdemo |
+| customerdemographics |
+| customers            |
+| empleados            |
+| employees            |
+| employees_copia      |
+| employeeterritories  |
+| lista_empleados      |
+| lista_empleados_a    |
+| nombre_cliente       |
+| orderdetails         |
+| orders               |
+| pagos_empleados      |
+| personas             |
+| products             |
+| prueba2              |
+| region               |
+| rfc_gringos          |
+| shippers             |
+| suppliers            |
+| temp_customer        |
+| territories          |
+| ventas_producto      |
++----------------------+
+25 rows in set (0.0017 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc products;
++-----------------+---------------+------+-----+---------+----------------+
+| Field           | Type          | Null | Key | Default | Extra          |
++-----------------+---------------+------+-----+---------+----------------+
+| ProductID       | int(11)       | NO   | PRI | NULL    | auto_increment |
+| ProductName     | varchar(40)   | NO   | MUL | NULL    |                |
+| SupplierID      | int(11)       | YES  | MUL | NULL    |                |
+| CategoryID      | int(11)       | YES  | MUL | NULL    |                |
+| QuantityPerUnit | varchar(20)   | YES  |     | NULL    |                |
+| UnitPrice       | decimal(10,4) | YES  |     | 0.0000  |                |
+| UnitsInStock    | smallint(2)   | YES  |     | 0       |                |
+| UnitsOnOrder    | smallint(2)   | YES  |     | 0       |                |
+| ReorderLevel    | smallint(2)   | YES  |     | 0       |                |
+| Discontinued    | bit(1)        | NO   |     | b'0'    |                |
++-----------------+---------------+------+-----+---------+----------------+
+10 rows in set (0.0017 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc categories;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| CategoryID   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| CategoryName | varchar(15) | NO   | MUL | NULL    |                |
+| Description  | mediumtext  | YES  |     | NULL    |                |
+| Picture      | longblob    | YES  |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.0018 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc suppliers;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| SupplierID   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| CompanyName  | varchar(40) | NO   | MUL | NULL    |                |
+| ContactName  | varchar(30) | YES  |     | NULL    |                |
+| ContactTitle | varchar(30) | YES  |     | NULL    |                |
+| Address      | varchar(60) | YES  |     | NULL    |                |
+| City         | varchar(15) | YES  |     | NULL    |                |
+| Region       | varchar(15) | YES  |     | NULL    |                |
+| PostalCode   | varchar(10) | YES  | MUL | NULL    |                |
+| Country      | varchar(15) | YES  |     | NULL    |                |
+| Phone        | varchar(24) | YES  |     | NULL    |                |
+| Fax          | varchar(24) | YES  |     | NULL    |                |
+| HomePage     | mediumtext  | YES  |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+12 rows in set (0.0017 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.orderid, b.productname, a.quantity, a.unitprice, (a.unitprice * a.quantity) as subtotal, c.categoryname
+                                         ... , d.companyname from orderdetails a
+                                         ... inner join products b on a.productid = b.productid
+                                         ... inner join categories c on c.categoryid = b.categoryid
+                                         ... inner join suppliers d on d.supplierid = b.suplierid limit 100;
+ERROR: 1054 (42S22): Unknown column 'b.suplierid' in 'on clause'
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.orderid, b.productname, a.quantity, a.unitprice, (a.unitprice * a.quantity) as subtotal, c.categoryname , d.companyname from orderdetails a inner join products b on a.productid = b.productid inner join categories c on c.categoryid = b.categoryid inner join suppliers d on d.supplierid = b.supplierid limit 100;
++---------+------------------+----------+-----------+------------+--------------+---------------------------+
+| orderid | productname      | quantity | unitprice | subtotal   | categoryname | companyname               |
++---------+------------------+----------+-----------+------------+--------------+---------------------------+
+|   10329 | Cte de Blaye     |       20 |  210.8000 |  4216.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10351 | Cte de Blaye     |       20 |  210.8000 |  4216.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10353 | Cte de Blaye     |       50 |  210.8000 | 10540.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10360 | Cte de Blaye     |       10 |  210.8000 |  2108.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10372 | Cte de Blaye     |       40 |  210.8000 |  8432.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10417 | Cte de Blaye     |       50 |  210.8000 | 10540.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10424 | Cte de Blaye     |       49 |  210.8000 | 10329.2000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10479 | Cte de Blaye     |       30 |  210.8000 |  6324.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10518 | Cte de Blaye     |       15 |  263.5000 |  3952.5000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10540 | Cte de Blaye     |       30 |  263.5000 |  7905.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10541 | Cte de Blaye     |        4 |  263.5000 |  1054.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10616 | Cte de Blaye     |       15 |  263.5000 |  3952.5000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10672 | Cte de Blaye     |       15 |  263.5000 |  3952.5000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10783 | Cte de Blaye     |        5 |  263.5000 |  1317.5000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10805 | Cte de Blaye     |       10 |  263.5000 |  2635.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10816 | Cte de Blaye     |       30 |  263.5000 |  7905.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10817 | Cte de Blaye     |       30 |  263.5000 |  7905.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10828 | Cte de Blaye     |        2 |  263.5000 |   527.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10831 | Cte de Blaye     |        8 |  263.5000 |  2108.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10865 | Cte de Blaye     |       60 |  263.5000 | 15810.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10889 | Cte de Blaye     |       40 |  263.5000 | 10540.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10964 | Cte de Blaye     |        5 |  263.5000 |  1317.5000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10981 | Cte de Blaye     |       60 |  263.5000 | 15810.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   11032 | Cte de Blaye     |       25 |  263.5000 |  6587.5000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10253 | Chartreuse verte |       42 |   14.4000 |   604.8000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10257 | Chartreuse verte |        6 |   14.4000 |    86.4000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10297 | Chartreuse verte |       60 |   14.4000 |   864.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10305 | Chartreuse verte |       30 |   14.4000 |   432.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10323 | Chartreuse verte |        4 |   14.4000 |    57.6000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10347 | Chartreuse verte |       50 |   14.4000 |   720.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10361 | Chartreuse verte |       54 |   14.4000 |   777.6000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10377 | Chartreuse verte |       20 |   14.4000 |   288.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10445 | Chartreuse verte |        6 |   14.4000 |    86.4000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10455 | Chartreuse verte |       20 |   14.4000 |   288.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10477 | Chartreuse verte |       20 |   14.4000 |   288.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10508 | Chartreuse verte |       10 |   18.0000 |   180.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10577 | Chartreuse verte |       10 |   18.0000 |   180.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10614 | Chartreuse verte |        5 |   18.0000 |    90.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10643 | Chartreuse verte |       21 |   18.0000 |   378.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10647 | Chartreuse verte |       20 |   18.0000 |   360.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10654 | Chartreuse verte |       20 |   18.0000 |   360.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10661 | Chartreuse verte |        3 |   18.0000 |    54.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10762 | Chartreuse verte |       16 |   18.0000 |   288.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10764 | Chartreuse verte |      130 |   18.0000 |  2340.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10784 | Chartreuse verte |        2 |   18.0000 |    36.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10827 | Chartreuse verte |       21 |   18.0000 |   378.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10830 | Chartreuse verte |       28 |   18.0000 |   504.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10840 | Chartreuse verte |       10 |   18.0000 |   180.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10865 | Chartreuse verte |       80 |   18.0000 |  1440.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10895 | Chartreuse verte |       45 |   18.0000 |   810.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10899 | Chartreuse verte |        8 |   18.0000 |   144.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10977 | Chartreuse verte |       30 |   18.0000 |   540.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   11069 | Chartreuse verte |       20 |   18.0000 |   360.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   11077 | Chartreuse verte |        2 |   18.0000 |    36.0000 | Beverages    | Aux joyeux ecclsiastiques |
+|   10287 | Sasquatch Ale    |       20 |   11.2000 |   224.0000 | Beverages    | Bigfoot Breweries         |
+|   10315 | Sasquatch Ale    |       14 |   11.2000 |   156.8000 | Beverages    | Bigfoot Breweries         |
+|   10358 | Sasquatch Ale    |       10 |   11.2000 |   112.0000 | Beverages    | Bigfoot Breweries         |
+|   10367 | Sasquatch Ale    |       36 |   11.2000 |   403.2000 | Beverages    | Bigfoot Breweries         |
+|   10386 | Sasquatch Ale    |       10 |   11.2000 |   112.0000 | Beverages    | Bigfoot Breweries         |
+|   10438 | Sasquatch Ale    |       20 |   11.2000 |   224.0000 | Beverages    | Bigfoot Breweries         |
+|   10483 | Sasquatch Ale    |       35 |   11.2000 |   392.0000 | Beverages    | Bigfoot Breweries         |
+|   10548 | Sasquatch Ale    |       10 |   14.0000 |   140.0000 | Beverages    | Bigfoot Breweries         |
+|   10573 | Sasquatch Ale    |       40 |   14.0000 |   560.0000 | Beverages    | Bigfoot Breweries         |
+|   10688 | Sasquatch Ale    |       14 |   14.0000 |   196.0000 | Beverages    | Bigfoot Breweries         |
+|   10700 | Sasquatch Ale    |       12 |   14.0000 |   168.0000 | Beverages    | Bigfoot Breweries         |
+|   10757 | Sasquatch Ale    |       30 |   14.0000 |   420.0000 | Beverages    | Bigfoot Breweries         |
+|   10805 | Sasquatch Ale    |       10 |   14.0000 |   140.0000 | Beverages    | Bigfoot Breweries         |
+|   10890 | Sasquatch Ale    |       10 |   14.0000 |   140.0000 | Beverages    | Bigfoot Breweries         |
+|   10937 | Sasquatch Ale    |       20 |   14.0000 |   280.0000 | Beverages    | Bigfoot Breweries         |
+|   10990 | Sasquatch Ale    |       60 |   14.0000 |   840.0000 | Beverages    | Bigfoot Breweries         |
+|   11008 | Sasquatch Ale    |       90 |   14.0000 |  1260.0000 | Beverages    | Bigfoot Breweries         |
+|   11063 | Sasquatch Ale    |       30 |   14.0000 |   420.0000 | Beverages    | Bigfoot Breweries         |
+|   11066 | Sasquatch Ale    |       35 |   14.0000 |   490.0000 | Beverages    | Bigfoot Breweries         |
+|   10261 | Steeleye Stout   |       20 |   14.4000 |   288.0000 | Beverages    | Bigfoot Breweries         |
+|   10281 | Steeleye Stout   |        4 |   14.4000 |    57.6000 | Beverages    | Bigfoot Breweries         |
+|   10286 | Steeleye Stout   |      100 |   14.4000 |  1440.0000 | Beverages    | Bigfoot Breweries         |
+|   10321 | Steeleye Stout   |       10 |   14.4000 |   144.0000 | Beverages    | Bigfoot Breweries         |
+|   10324 | Steeleye Stout   |       70 |   14.4000 |  1008.0000 | Beverages    | Bigfoot Breweries         |
+|   10390 | Steeleye Stout   |       40 |   14.4000 |   576.0000 | Beverages    | Bigfoot Breweries         |
+|   10398 | Steeleye Stout   |       30 |   14.4000 |   432.0000 | Beverages    | Bigfoot Breweries         |
+|   10400 | Steeleye Stout   |       35 |   14.4000 |   504.0000 | Beverages    | Bigfoot Breweries         |
+|   10424 | Steeleye Stout   |       60 |   14.4000 |   864.0000 | Beverages    | Bigfoot Breweries         |
+|   10444 | Steeleye Stout   |        8 |   14.4000 |   115.2000 | Beverages    | Bigfoot Breweries         |
+|   10521 | Steeleye Stout   |        3 |   18.0000 |    54.0000 | Beverages    | Bigfoot Breweries         |
+|   10546 | Steeleye Stout   |       30 |   18.0000 |   540.0000 | Beverages    | Bigfoot Breweries         |
+|   10551 | Steeleye Stout   |       20 |   18.0000 |   360.0000 | Beverages    | Bigfoot Breweries         |
+|   10553 | Steeleye Stout   |        6 |   18.0000 |   108.0000 | Beverages    | Bigfoot Breweries         |
+|   10578 | Steeleye Stout   |       20 |   18.0000 |   360.0000 | Beverages    | Bigfoot Breweries         |
+|   10587 | Steeleye Stout   |       20 |   18.0000 |   360.0000 | Beverages    | Bigfoot Breweries         |
+|   10589 | Steeleye Stout   |        4 |   18.0000 |    72.0000 | Beverages    | Bigfoot Breweries         |
+|   10595 | Steeleye Stout   |       30 |   18.0000 |   540.0000 | Beverages    | Bigfoot Breweries         |
+|   10623 | Steeleye Stout   |       30 |   18.0000 |   540.0000 | Beverages    | Bigfoot Breweries         |
+|   10697 | Steeleye Stout   |        9 |   18.0000 |   162.0000 | Beverages    | Bigfoot Breweries         |
+|   10720 | Steeleye Stout   |       21 |   18.0000 |   378.0000 | Beverages    | Bigfoot Breweries         |
+|   10740 | Steeleye Stout   |       35 |   18.0000 |   630.0000 | Beverages    | Bigfoot Breweries         |
+|   10789 | Steeleye Stout   |       15 |   18.0000 |   270.0000 | Beverages    | Bigfoot Breweries         |
+|   10821 | Steeleye Stout   |       20 |   18.0000 |   360.0000 | Beverages    | Bigfoot Breweries         |
+|   10831 | Steeleye Stout   |        8 |   18.0000 |   144.0000 | Beverages    | Bigfoot Breweries         |
+|   10836 | Steeleye Stout   |        6 |   18.0000 |   108.0000 | Beverages    | Bigfoot Breweries         |
+|   10845 | Steeleye Stout   |       25 |   18.0000 |   450.0000 | Beverages    | Bigfoot Breweries         |
++---------+------------------+----------+-----------+------------+--------------+---------------------------+
+100 rows in set (0.0349 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc orders;
++----------------+---------------+------+-----+---------+----------------+
+| Field          | Type          | Null | Key | Default | Extra          |
++----------------+---------------+------+-----+---------+----------------+
+| OrderID        | int(11)       | NO   | PRI | NULL    | auto_increment |
+| CustomerID     | varchar(5)    | YES  | MUL | NULL    |                |
+| EmployeeID     | int(11)       | YES  | MUL | NULL    |                |
+| OrderDate      | datetime      | YES  | MUL | NULL    |                |
+| RequiredDate   | datetime      | YES  |     | NULL    |                |
+| ShippedDate    | datetime      | YES  | MUL | NULL    |                |
+| ShipVia        | int(11)       | YES  | MUL | NULL    |                |
+| Freight        | decimal(10,4) | YES  |     | 0.0000  |                |
+| ShipName       | varchar(40)   | YES  |     | NULL    |                |
+| ShipAddress    | varchar(60)   | YES  |     | NULL    |                |
+| ShipCity       | varchar(15)   | YES  |     | NULL    |                |
+| ShipRegion     | varchar(15)   | YES  |     | NULL    |                |
+| ShipPostalCode | varchar(10)   | YES  | MUL | NULL    |                |
+| ShipCountry    | varchar(15)   | YES  |     | NULL    |                |
++----------------+---------------+------+-----+---------+----------------+
+14 rows in set (0.0019 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc employees;
++-----------------+--------------+------+-----+---------+----------------+
+| Field           | Type         | Null | Key | Default | Extra          |
++-----------------+--------------+------+-----+---------+----------------+
+| EmployeeID      | int(11)      | NO   | PRI | NULL    | auto_increment |
+| LastName        | varchar(20)  | NO   | MUL | NULL    |                |
+| FirstName       | varchar(10)  | NO   |     | NULL    |                |
+| Title           | varchar(30)  | YES  |     | NULL    |                |
+| TitleOfCourtesy | varchar(25)  | YES  |     | NULL    |                |
+| BirthDate       | datetime     | YES  |     | NULL    |                |
+| HireDate        | datetime     | YES  |     | NULL    |                |
+| Address         | varchar(60)  | YES  |     | NULL    |                |
+| City            | varchar(15)  | YES  |     | NULL    |                |
+| Region          | varchar(15)  | YES  |     | NULL    |                |
+| PostalCode      | varchar(10)  | YES  | MUL | NULL    |                |
+| Country         | varchar(15)  | YES  |     | NULL    |                |
+| HomePhone       | varchar(24)  | YES  |     | NULL    |                |
+| Extension       | varchar(4)   | YES  |     | NULL    |                |
+| Notes           | mediumtext   | NO   |     | NULL    |                |
+| ReportsTo       | int(11)      | YES  | MUL | NULL    |                |
+| PhotoPath       | varchar(255) | YES  |     | NULL    |                |
+| Salary          | float        | YES  |     | NULL    |                |
++-----------------+--------------+------+-----+---------+----------------+
+18 rows in set (0.0018 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > show tables;
++----------------------+
+| Tables_in_northwind  |
++----------------------+
+| account              |
+| categories           |
+| customercustomerdemo |
+| customerdemographics |
+| customers            |
+| empleados            |
+| employees            |
+| employees_copia      |
+| employeeterritories  |
+| lista_empleados      |
+| lista_empleados_a    |
+| nombre_cliente       |
+| orderdetails         |
+| orders               |
+| pagos_empleados      |
+| personas             |
+| products             |
+| prueba2              |
+| region               |
+| rfc_gringos          |
+| shippers             |
+| suppliers            |
+| temp_customer        |
+| territories          |
+| ventas_producto      |
++----------------------+
+25 rows in set (0.0015 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc region;
++-------------------+-------------+------+-----+---------+-------+
+| Field             | Type        | Null | Key | Default | Extra |
++-------------------+-------------+------+-----+---------+-------+
+| RegionID          | int(11)     | NO   | PRI | NULL    |       |
+| RegionDescription | varchar(50) | NO   |     | NULL    |       |
++-------------------+-------------+------+-----+---------+-------+
+2 rows in set (0.0016 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.orderid, b.lastname, b.firstname from orders a
+                                         ... inner join employees  on a.employeeid = b.employeeid;
+ERROR: 1054 (42S22): Unknown column 'b.lastname' in 'field list'
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.orderid, b.lastname, b.firstname from orders a inner join employees b on a.employeeid = b.employeeid;
++---------+-----------+-----------+
+| orderid | lastname  | firstname |
++---------+-----------+-----------+
+|   10258 | Davolio   | Nancy     |
+|   10270 | Davolio   | Nancy     |
+|   10275 | Davolio   | Nancy     |
+|   10285 | Davolio   | Nancy     |
+|   10292 | Davolio   | Nancy     |
+|   10293 | Davolio   | Nancy     |
+|   10304 | Davolio   | Nancy     |
+|   10306 | Davolio   | Nancy     |
+|   10311 | Davolio   | Nancy     |
+|   10314 | Davolio   | Nancy     |
+|   10316 | Davolio   | Nancy     |
+|   10325 | Davolio   | Nancy     |
+|   10340 | Davolio   | Nancy     |
+|   10351 | Davolio   | Nancy     |
+|   10357 | Davolio   | Nancy     |
+|   10361 | Davolio   | Nancy     |
+|   10364 | Davolio   | Nancy     |
+|   10371 | Davolio   | Nancy     |
+|   10374 | Davolio   | Nancy     |
+|   10376 | Davolio   | Nancy     |
+|   10377 | Davolio   | Nancy     |
+|   10385 | Davolio   | Nancy     |
+|   10387 | Davolio   | Nancy     |
+|   10393 | Davolio   | Nancy     |
+|   10394 | Davolio   | Nancy     |
+|   10396 | Davolio   | Nancy     |
+|   10400 | Davolio   | Nancy     |
+|   10401 | Davolio   | Nancy     |
+|   10405 | Davolio   | Nancy     |
+|   10453 | Davolio   | Nancy     |
+|   10461 | Davolio   | Nancy     |
+|   10465 | Davolio   | Nancy     |
+|   10469 | Davolio   | Nancy     |
+|   10473 | Davolio   | Nancy     |
+|   10482 | Davolio   | Nancy     |
+|   10486 | Davolio   | Nancy     |
+|   10508 | Davolio   | Nancy     |
+|   10524 | Davolio   | Nancy     |
+|   10525 | Davolio   | Nancy     |
+|   10537 | Davolio   | Nancy     |
+|   10542 | Davolio   | Nancy     |
+|   10546 | Davolio   | Nancy     |
+|   10558 | Davolio   | Nancy     |
+|   10562 | Davolio   | Nancy     |
+|   10567 | Davolio   | Nancy     |
+|   10579 | Davolio   | Nancy     |
+|   10587 | Davolio   | Nancy     |
+|   10591 | Davolio   | Nancy     |
+|   10598 | Davolio   | Nancy     |
+|   10604 | Davolio   | Nancy     |
+|   10605 | Davolio   | Nancy     |
+|   10612 | Davolio   | Nancy     |
+|   10616 | Davolio   | Nancy     |
+|   10618 | Davolio   | Nancy     |
+|   10626 | Davolio   | Nancy     |
+|   10630 | Davolio   | Nancy     |
+|   10653 | Davolio   | Nancy     |
+|   10655 | Davolio   | Nancy     |
+|   10664 | Davolio   | Nancy     |
+|   10665 | Davolio   | Nancy     |
+|   10668 | Davolio   | Nancy     |
+|   10671 | Davolio   | Nancy     |
+|   10677 | Davolio   | Nancy     |
+|   10680 | Davolio   | Nancy     |
+|   10689 | Davolio   | Nancy     |
+|   10690 | Davolio   | Nancy     |
+|   10709 | Davolio   | Nancy     |
+|   10710 | Davolio   | Nancy     |
+|   10713 | Davolio   | Nancy     |
+|   10717 | Davolio   | Nancy     |
+|   10718 | Davolio   | Nancy     |
+|   10733 | Davolio   | Nancy     |
+|   10743 | Davolio   | Nancy     |
+|   10746 | Davolio   | Nancy     |
+|   10773 | Davolio   | Nancy     |
+|   10776 | Davolio   | Nancy     |
+|   10785 | Davolio   | Nancy     |
+|   10788 | Davolio   | Nancy     |
+|   10789 | Davolio   | Nancy     |
+|   10792 | Davolio   | Nancy     |
+|   10800 | Davolio   | Nancy     |
+|   10813 | Davolio   | Nancy     |
+|   10821 | Davolio   | Nancy     |
+|   10825 | Davolio   | Nancy     |
+|   10827 | Davolio   | Nancy     |
+|   10834 | Davolio   | Nancy     |
+|   10835 | Davolio   | Nancy     |
+|   10842 | Davolio   | Nancy     |
+|   10850 | Davolio   | Nancy     |
+|   10859 | Davolio   | Nancy     |
+|   10877 | Davolio   | Nancy     |
+|   10886 | Davolio   | Nancy     |
+|   10888 | Davolio   | Nancy     |
+|   10894 | Davolio   | Nancy     |
+|   10900 | Davolio   | Nancy     |
+|   10902 | Davolio   | Nancy     |
+|   10909 | Davolio   | Nancy     |
+|   10910 | Davolio   | Nancy     |
+|   10916 | Davolio   | Nancy     |
+|   10921 | Davolio   | Nancy     |
+|   10928 | Davolio   | Nancy     |
+|   10946 | Davolio   | Nancy     |
+|   10950 | Davolio   | Nancy     |
+|   10952 | Davolio   | Nancy     |
+|   10968 | Davolio   | Nancy     |
+|   10969 | Davolio   | Nancy     |
+|   10975 | Davolio   | Nancy     |
+|   10976 | Davolio   | Nancy     |
+|   10981 | Davolio   | Nancy     |
+|   10984 | Davolio   | Nancy     |
+|   10991 | Davolio   | Nancy     |
+|   10992 | Davolio   | Nancy     |
+|   10995 | Davolio   | Nancy     |
+|   11012 | Davolio   | Nancy     |
+|   11023 | Davolio   | Nancy     |
+|   11027 | Davolio   | Nancy     |
+|   11038 | Davolio   | Nancy     |
+|   11039 | Davolio   | Nancy     |
+|   11064 | Davolio   | Nancy     |
+|   11067 | Davolio   | Nancy     |
+|   11069 | Davolio   | Nancy     |
+|   11071 | Davolio   | Nancy     |
+|   11077 | Davolio   | Nancy     |
+|   10265 | Fuller    | Andrew    |
+|   10277 | Fuller    | Andrew    |
+|   10280 | Fuller    | Andrew    |
+|   10295 | Fuller    | Andrew    |
+|   10300 | Fuller    | Andrew    |
+|   10307 | Fuller    | Andrew    |
+|   10312 | Fuller    | Andrew    |
+|   10313 | Fuller    | Andrew    |
+|   10327 | Fuller    | Andrew    |
+|   10339 | Fuller    | Andrew    |
+|   10345 | Fuller    | Andrew    |
+|   10368 | Fuller    | Andrew    |
+|   10379 | Fuller    | Andrew    |
+|   10388 | Fuller    | Andrew    |
+|   10392 | Fuller    | Andrew    |
+|   10398 | Fuller    | Andrew    |
+|   10404 | Fuller    | Andrew    |
+|   10407 | Fuller    | Andrew    |
+|   10414 | Fuller    | Andrew    |
+|   10422 | Fuller    | Andrew    |
+|   10457 | Fuller    | Andrew    |
+|   10462 | Fuller    | Andrew    |
+|   10471 | Fuller    | Andrew    |
+|   10478 | Fuller    | Andrew    |
+|   10487 | Fuller    | Andrew    |
+|   10502 | Fuller    | Andrew    |
+|   10515 | Fuller    | Andrew    |
+|   10516 | Fuller    | Andrew    |
+|   10541 | Fuller    | Andrew    |
+|   10552 | Fuller    | Andrew    |
+|   10553 | Fuller    | Andrew    |
+|   10556 | Fuller    | Andrew    |
+|   10561 | Fuller    | Andrew    |
+|   10563 | Fuller    | Andrew    |
+|   10583 | Fuller    | Andrew    |
+|   10588 | Fuller    | Andrew    |
+|   10595 | Fuller    | Andrew    |
+|   10615 | Fuller    | Andrew    |
+|   10620 | Fuller    | Andrew    |
+|   10657 | Fuller    | Andrew    |
+|   10663 | Fuller    | Andrew    |
+|   10669 | Fuller    | Andrew    |
+|   10673 | Fuller    | Andrew    |
+|   10676 | Fuller    | Andrew    |
+|   10683 | Fuller    | Andrew    |
+|   10686 | Fuller    | Andrew    |
+|   10691 | Fuller    | Andrew    |
+|   10727 | Fuller    | Andrew    |
+|   10734 | Fuller    | Andrew    |
+|   10737 | Fuller    | Andrew    |
+|   10738 | Fuller    | Andrew    |
+|   10752 | Fuller    | Andrew    |
+|   10780 | Fuller    | Andrew    |
+|   10781 | Fuller    | Andrew    |
+|   10787 | Fuller    | Andrew    |
+|   10798 | Fuller    | Andrew    |
+|   10805 | Fuller    | Andrew    |
+|   10808 | Fuller    | Andrew    |
+|   10810 | Fuller    | Andrew    |
+|   10815 | Fuller    | Andrew    |
+|   10819 | Fuller    | Andrew    |
+|   10832 | Fuller    | Andrew    |
+|   10846 | Fuller    | Andrew    |
+|   10858 | Fuller    | Andrew    |
+|   10865 | Fuller    | Andrew    |
+|   10912 | Fuller    | Andrew    |
+|   10915 | Fuller    | Andrew    |
+|   10919 | Fuller    | Andrew    |
+|   10939 | Fuller    | Andrew    |
+|   10949 | Fuller    | Andrew    |
+|   10967 | Fuller    | Andrew    |
+|   10971 | Fuller    | Andrew    |
+|   10982 | Fuller    | Andrew    |
+|   10983 | Fuller    | Andrew    |
+|   10985 | Fuller    | Andrew    |
+|   10989 | Fuller    | Andrew    |
+|   10990 | Fuller    | Andrew    |
+|   10994 | Fuller    | Andrew    |
+|   11000 | Fuller    | Andrew    |
+|   11001 | Fuller    | Andrew    |
+|   11005 | Fuller    | Andrew    |
+|   11009 | Fuller    | Andrew    |
+|   11010 | Fuller    | Andrew    |
+|   11013 | Fuller    | Andrew    |
+|   11014 | Fuller    | Andrew    |
+|   11015 | Fuller    | Andrew    |
+|   11020 | Fuller    | Andrew    |
+|   11028 | Fuller    | Andrew    |
+|   11032 | Fuller    | Andrew    |
+|   11035 | Fuller    | Andrew    |
+|   11042 | Fuller    | Andrew    |
+|   11053 | Fuller    | Andrew    |
+|   11059 | Fuller    | Andrew    |
+|   11060 | Fuller    | Andrew    |
+|   11070 | Fuller    | Andrew    |
+|   11073 | Fuller    | Andrew    |
+|   10251 | Leverling | Janet     |
+|   10253 | Leverling | Janet     |
+|   10256 | Leverling | Janet     |
+|   10266 | Leverling | Janet     |
+|   10273 | Leverling | Janet     |
+|   10283 | Leverling | Janet     |
+|   10309 | Leverling | Janet     |
+|   10321 | Leverling | Janet     |
+|   10330 | Leverling | Janet     |
+|   10332 | Leverling | Janet     |
+|   10346 | Leverling | Janet     |
+|   10352 | Leverling | Janet     |
+|   10362 | Leverling | Janet     |
+|   10365 | Leverling | Janet     |
+|   10375 | Leverling | Janet     |
+|   10381 | Leverling | Janet     |
+|   10384 | Leverling | Janet     |
+|   10391 | Leverling | Janet     |
+|   10409 | Leverling | Janet     |
+|   10410 | Leverling | Janet     |
+|   10413 | Leverling | Janet     |
+|   10415 | Leverling | Janet     |
+|   10420 | Leverling | Janet     |
+|   10429 | Leverling | Janet     |
+|   10432 | Leverling | Janet     |
+|   10433 | Leverling | Janet     |
+|   10434 | Leverling | Janet     |
+|   10436 | Leverling | Janet     |
+|   10438 | Leverling | Janet     |
+|   10441 | Leverling | Janet     |
+|   10442 | Leverling | Janet     |
+|   10444 | Leverling | Janet     |
+|   10445 | Leverling | Janet     |
+|   10449 | Leverling | Janet     |
+|   10468 | Leverling | Janet     |
+|   10479 | Leverling | Janet     |
+|   10484 | Leverling | Janet     |
+|   10492 | Leverling | Janet     |
+|   10495 | Leverling | Janet     |
+|   10505 | Leverling | Janet     |
+|   10514 | Leverling | Janet     |
+|   10517 | Leverling | Janet     |
+|   10530 | Leverling | Janet     |
+|   10536 | Leverling | Janet     |
+|   10540 | Leverling | Janet     |
+|   10547 | Leverling | Janet     |
+|   10548 | Leverling | Janet     |
+|   10568 | Leverling | Janet     |
+|   10570 | Leverling | Janet     |
+|   10572 | Leverling | Janet     |
+|   10576 | Leverling | Janet     |
+|   10581 | Leverling | Janet     |
+|   10582 | Leverling | Janet     |
+|   10592 | Leverling | Janet     |
+|   10594 | Leverling | Janet     |
+|   10619 | Leverling | Janet     |
+|   10625 | Leverling | Janet     |
+|   10638 | Leverling | Janet     |
+|   10644 | Leverling | Janet     |
+|   10662 | Leverling | Janet     |
+|   10681 | Leverling | Janet     |
+|   10682 | Leverling | Janet     |
+|   10684 | Leverling | Janet     |
+|   10693 | Leverling | Janet     |
+|   10697 | Leverling | Janet     |
+|   10699 | Leverling | Janet     |
+|   10700 | Leverling | Janet     |
+|   10712 | Leverling | Janet     |
+|   10715 | Leverling | Janet     |
+|   10723 | Leverling | Janet     |
+|   10732 | Leverling | Janet     |
+|   10739 | Leverling | Janet     |
+|   10742 | Leverling | Janet     |
+|   10748 | Leverling | Janet     |
+|   10751 | Leverling | Janet     |
+|   10753 | Leverling | Janet     |
+|   10758 | Leverling | Janet     |
+|   10759 | Leverling | Janet     |
+|   10762 | Leverling | Janet     |
+|   10763 | Leverling | Janet     |
+|   10765 | Leverling | Janet     |
+|   10768 | Leverling | Janet     |
+|   10769 | Leverling | Janet     |
+|   10772 | Leverling | Janet     |
+|   10778 | Leverling | Janet     |
+|   10779 | Leverling | Janet     |
+|   10793 | Leverling | Janet     |
+|   10796 | Leverling | Janet     |
+|   10806 | Leverling | Janet     |
+|   10814 | Leverling | Janet     |
+|   10817 | Leverling | Janet     |
+|   10820 | Leverling | Janet     |
+|   10831 | Leverling | Janet     |
+|   10838 | Leverling | Janet     |
+|   10839 | Leverling | Janet     |
+|   10854 | Leverling | Janet     |
+|   10855 | Leverling | Janet     |
+|   10856 | Leverling | Janet     |
+|   10860 | Leverling | Janet     |
+|   10879 | Leverling | Janet     |
+|   10895 | Leverling | Janet     |
+|   10897 | Leverling | Janet     |
+|   10903 | Leverling | Janet     |
+|   10904 | Leverling | Janet     |
+|   10911 | Leverling | Janet     |
+|   10918 | Leverling | Janet     |
+|   10924 | Leverling | Janet     |
+|   10925 | Leverling | Janet     |
+|   10934 | Leverling | Janet     |
+|   10936 | Leverling | Janet     |
+|   10938 | Leverling | Janet     |
+|   10947 | Leverling | Janet     |
+|   10948 | Leverling | Janet     |
+|   10960 | Leverling | Janet     |
+|   10964 | Leverling | Janet     |
+|   10974 | Leverling | Janet     |
+|   10988 | Leverling | Janet     |
+|   11003 | Leverling | Janet     |
+|   11004 | Leverling | Janet     |
+|   11006 | Leverling | Janet     |
+|   11011 | Leverling | Janet     |
+|   11021 | Leverling | Janet     |
+|   11041 | Leverling | Janet     |
+|   11049 | Leverling | Janet     |
+|   11052 | Leverling | Janet     |
+|   11057 | Leverling | Janet     |
+|   11063 | Leverling | Janet     |
+|   10250 | Peacock   | Margaret  |
+|   10252 | Peacock   | Margaret  |
+|   10257 | Peacock   | Margaret  |
+|   10259 | Peacock   | Margaret  |
+|   10260 | Peacock   | Margaret  |
+|   10261 | Peacock   | Margaret  |
+|   10267 | Peacock   | Margaret  |
+|   10281 | Peacock   | Margaret  |
+|   10282 | Peacock   | Margaret  |
+|   10284 | Peacock   | Margaret  |
+|   10288 | Peacock   | Margaret  |
+|   10294 | Peacock   | Margaret  |
+|   10299 | Peacock   | Margaret  |
+|   10302 | Peacock   | Margaret  |
+|   10315 | Peacock   | Margaret  |
+|   10323 | Peacock   | Margaret  |
+|   10326 | Peacock   | Margaret  |
+|   10328 | Peacock   | Margaret  |
+|   10329 | Peacock   | Margaret  |
+|   10337 | Peacock   | Margaret  |
+|   10338 | Peacock   | Margaret  |
+|   10342 | Peacock   | Margaret  |
+|   10343 | Peacock   | Margaret  |
+|   10344 | Peacock   | Margaret  |
+|   10347 | Peacock   | Margaret  |
+|   10348 | Peacock   | Margaret  |
+|   10360 | Peacock   | Margaret  |
+|   10363 | Peacock   | Margaret  |
+|   10373 | Peacock   | Margaret  |
+|   10382 | Peacock   | Margaret  |
+|   10389 | Peacock   | Margaret  |
+|   10403 | Peacock   | Margaret  |
+|   10417 | Peacock   | Margaret  |
+|   10418 | Peacock   | Margaret  |
+|   10419 | Peacock   | Margaret  |
+|   10426 | Peacock   | Margaret  |
+|   10427 | Peacock   | Margaret  |
+|   10430 | Peacock   | Margaret  |
+|   10431 | Peacock   | Margaret  |
+|   10440 | Peacock   | Margaret  |
+|   10447 | Peacock   | Margaret  |
+|   10448 | Peacock   | Margaret  |
+|   10451 | Peacock   | Margaret  |
+|   10454 | Peacock   | Margaret  |
+|   10459 | Peacock   | Margaret  |
+|   10464 | Peacock   | Margaret  |
+|   10466 | Peacock   | Margaret  |
+|   10470 | Peacock   | Margaret  |
+|   10485 | Peacock   | Margaret  |
+|   10493 | Peacock   | Margaret  |
+|   10494 | Peacock   | Margaret  |
+|   10499 | Peacock   | Margaret  |
+|   10504 | Peacock   | Margaret  |
+|   10509 | Peacock   | Margaret  |
+|   10511 | Peacock   | Margaret  |
+|   10518 | Peacock   | Margaret  |
+|   10522 | Peacock   | Margaret  |
+|   10526 | Peacock   | Margaret  |
+|   10535 | Peacock   | Margaret  |
+|   10544 | Peacock   | Margaret  |
+|   10551 | Peacock   | Margaret  |
+|   10554 | Peacock   | Margaret  |
+|   10564 | Peacock   | Margaret  |
+|   10574 | Peacock   | Margaret  |
+|   10578 | Peacock   | Margaret  |
+|   10580 | Peacock   | Margaret  |
+|   10584 | Peacock   | Margaret  |
+|   10590 | Peacock   | Margaret  |
+|   10600 | Peacock   | Margaret  |
+|   10606 | Peacock   | Margaret  |
+|   10608 | Peacock   | Margaret  |
+|   10613 | Peacock   | Margaret  |
+|   10617 | Peacock   | Margaret  |
+|   10621 | Peacock   | Margaret  |
+|   10622 | Peacock   | Margaret  |
+|   10624 | Peacock   | Margaret  |
+|   10628 | Peacock   | Margaret  |
+|   10629 | Peacock   | Margaret  |
+|   10634 | Peacock   | Margaret  |
+|   10636 | Peacock   | Margaret  |
+|   10640 | Peacock   | Margaret  |
+|   10641 | Peacock   | Margaret  |
+|   10645 | Peacock   | Margaret  |
+|   10647 | Peacock   | Margaret  |
+|   10652 | Peacock   | Margaret  |
+|   10658 | Peacock   | Margaret  |
+|   10670 | Peacock   | Margaret  |
+|   10674 | Peacock   | Margaret  |
+|   10685 | Peacock   | Margaret  |
+|   10688 | Peacock   | Margaret  |
+|   10692 | Peacock   | Margaret  |
+|   10698 | Peacock   | Margaret  |
+|   10702 | Peacock   | Margaret  |
+|   10707 | Peacock   | Margaret  |
+|   10716 | Peacock   | Margaret  |
+|   10725 | Peacock   | Margaret  |
+|   10726 | Peacock   | Margaret  |
+|   10728 | Peacock   | Margaret  |
+|   10740 | Peacock   | Margaret  |
+|   10741 | Peacock   | Margaret  |
+|   10749 | Peacock   | Margaret  |
+|   10755 | Peacock   | Margaret  |
+|   10760 | Peacock   | Margaret  |
+|   10766 | Peacock   | Margaret  |
+|   10767 | Peacock   | Margaret  |
+|   10774 | Peacock   | Margaret  |
+|   10783 | Peacock   | Margaret  |
+|   10784 | Peacock   | Margaret  |
+|   10801 | Peacock   | Margaret  |
+|   10802 | Peacock   | Margaret  |
+|   10803 | Peacock   | Margaret  |
+|   10807 | Peacock   | Margaret  |
+|   10816 | Peacock   | Margaret  |
+|   10830 | Peacock   | Margaret  |
+|   10840 | Peacock   | Margaret  |
+|   10843 | Peacock   | Margaret  |
+|   10847 | Peacock   | Margaret  |
+|   10861 | Peacock   | Margaret  |
+|   10863 | Peacock   | Margaret  |
+|   10864 | Peacock   | Margaret  |
+|   10873 | Peacock   | Margaret  |
+|   10875 | Peacock   | Margaret  |
+|   10878 | Peacock   | Margaret  |
+|   10881 | Peacock   | Margaret  |
+|   10882 | Peacock   | Margaret  |
+|   10884 | Peacock   | Margaret  |
+|   10892 | Peacock   | Margaret  |
+|   10898 | Peacock   | Margaret  |
+|   10901 | Peacock   | Margaret  |
+|   10906 | Peacock   | Margaret  |
+|   10908 | Peacock   | Margaret  |
+|   10913 | Peacock   | Margaret  |
+|   10917 | Peacock   | Margaret  |
+|   10920 | Peacock   | Margaret  |
+|   10926 | Peacock   | Margaret  |
+|   10927 | Peacock   | Margaret  |
+|   10930 | Peacock   | Margaret  |
+|   10931 | Peacock   | Margaret  |
+|   10935 | Peacock   | Margaret  |
+|   10943 | Peacock   | Margaret  |
+|   10945 | Peacock   | Margaret  |
+|   10966 | Peacock   | Margaret  |
+|   10972 | Peacock   | Margaret  |
+|   10980 | Peacock   | Margaret  |
+|   10996 | Peacock   | Margaret  |
+|   11002 | Peacock   | Margaret  |
+|   11018 | Peacock   | Margaret  |
+|   11024 | Peacock   | Margaret  |
+|   11026 | Peacock   | Margaret  |
+|   11029 | Peacock   | Margaret  |
+|   11040 | Peacock   | Margaret  |
+|   11044 | Peacock   | Margaret  |
+|   11061 | Peacock   | Margaret  |
+|   11062 | Peacock   | Margaret  |
+|   11072 | Peacock   | Margaret  |
+|   11076 | Peacock   | Margaret  |
+|   10248 | Buchanan  | Steven    |
+|   10254 | Buchanan  | Steven    |
+|   10269 | Buchanan  | Steven    |
+|   10297 | Buchanan  | Steven    |
+|   10320 | Buchanan  | Steven    |
+|   10333 | Buchanan  | Steven    |
+|   10358 | Buchanan  | Steven    |
+|   10359 | Buchanan  | Steven    |
+|   10372 | Buchanan  | Steven    |
+|   10378 | Buchanan  | Steven    |
+|   10397 | Buchanan  | Steven    |
+|   10463 | Buchanan  | Steven    |
+|   10474 | Buchanan  | Steven    |
+|   10477 | Buchanan  | Steven    |
+|   10529 | Buchanan  | Steven    |
+|   10549 | Buchanan  | Steven    |
+|   10569 | Buchanan  | Steven    |
+|   10575 | Buchanan  | Steven    |
+|   10607 | Buchanan  | Steven    |
+|   10648 | Buchanan  | Steven    |
+|   10649 | Buchanan  | Steven    |
+|   10650 | Buchanan  | Steven    |
+|   10654 | Buchanan  | Steven    |
+|   10675 | Buchanan  | Steven    |
+|   10711 | Buchanan  | Steven    |
+|   10714 | Buchanan  | Steven    |
+|   10721 | Buchanan  | Steven    |
+|   10730 | Buchanan  | Steven    |
+|   10761 | Buchanan  | Steven    |
+|   10812 | Buchanan  | Steven    |
+|   10823 | Buchanan  | Steven    |
+|   10841 | Buchanan  | Steven    |
+|   10851 | Buchanan  | Steven    |
+|   10866 | Buchanan  | Steven    |
+|   10869 | Buchanan  | Steven    |
+|   10870 | Buchanan  | Steven    |
+|   10872 | Buchanan  | Steven    |
+|   10874 | Buchanan  | Steven    |
+|   10899 | Buchanan  | Steven    |
+|   10922 | Buchanan  | Steven    |
+|   10954 | Buchanan  | Steven    |
+|   11043 | Buchanan  | Steven    |
+|   10249 | Suyama    | Michael   |
+|   10264 | Suyama    | Michael   |
+|   10271 | Suyama    | Michael   |
+|   10272 | Suyama    | Michael   |
+|   10274 | Suyama    | Michael   |
+|   10291 | Suyama    | Michael   |
+|   10296 | Suyama    | Michael   |
+|   10298 | Suyama    | Michael   |
+|   10317 | Suyama    | Michael   |
+|   10350 | Suyama    | Michael   |
+|   10355 | Suyama    | Michael   |
+|   10356 | Suyama    | Michael   |
+|   10370 | Suyama    | Michael   |
+|   10390 | Suyama    | Michael   |
+|   10395 | Suyama    | Michael   |
+|   10423 | Suyama    | Michael   |
+|   10425 | Suyama    | Michael   |
+|   10439 | Suyama    | Michael   |
+|   10446 | Suyama    | Michael   |
+|   10480 | Suyama    | Michael   |
+|   10489 | Suyama    | Michael   |
+|   10500 | Suyama    | Michael   |
+|   10503 | Suyama    | Michael   |
+|   10510 | Suyama    | Michael   |
+|   10519 | Suyama    | Michael   |
+|   10528 | Suyama    | Michael   |
+|   10539 | Suyama    | Michael   |
+|   10555 | Suyama    | Michael   |
+|   10559 | Suyama    | Michael   |
+|   10599 | Suyama    | Michael   |
+|   10611 | Suyama    | Michael   |
+|   10637 | Suyama    | Michael   |
+|   10643 | Suyama    | Michael   |
+|   10656 | Suyama    | Michael   |
+|   10701 | Suyama    | Michael   |
+|   10703 | Suyama    | Michael   |
+|   10704 | Suyama    | Michael   |
+|   10708 | Suyama    | Michael   |
+|   10735 | Suyama    | Michael   |
+|   10744 | Suyama    | Michael   |
+|   10747 | Suyama    | Michael   |
+|   10754 | Suyama    | Michael   |
+|   10757 | Suyama    | Michael   |
+|   10764 | Suyama    | Michael   |
+|   10790 | Suyama    | Michael   |
+|   10791 | Suyama    | Michael   |
+|   10794 | Suyama    | Michael   |
+|   10804 | Suyama    | Michael   |
+|   10822 | Suyama    | Michael   |
+|   10826 | Suyama    | Michael   |
+|   10833 | Suyama    | Michael   |
+|   10867 | Suyama    | Michael   |
+|   10885 | Suyama    | Michael   |
+|   10907 | Suyama    | Michael   |
+|   10914 | Suyama    | Michael   |
+|   10929 | Suyama    | Michael   |
+|   10933 | Suyama    | Michael   |
+|   10944 | Suyama    | Michael   |
+|   10956 | Suyama    | Michael   |
+|   10959 | Suyama    | Michael   |
+|   10965 | Suyama    | Michael   |
+|   10973 | Suyama    | Michael   |
+|   10999 | Suyama    | Michael   |
+|   11019 | Suyama    | Michael   |
+|   11025 | Suyama    | Michael   |
+|   11031 | Suyama    | Michael   |
+|   11045 | Suyama    | Michael   |
+|   10289 | King      | Robert    |
+|   10303 | King      | Robert    |
+|   10308 | King      | Robert    |
+|   10319 | King      | Robert    |
+|   10322 | King      | Robert    |
+|   10335 | King      | Robert    |
+|   10336 | King      | Robert    |
+|   10341 | King      | Robert    |
+|   10349 | King      | Robert    |
+|   10353 | King      | Robert    |
+|   10367 | King      | Robert    |
+|   10406 | King      | Robert    |
+|   10424 | King      | Robert    |
+|   10428 | King      | Robert    |
+|   10458 | King      | Robert    |
+|   10483 | King      | Robert    |
+|   10490 | King      | Robert    |
+|   10496 | King      | Robert    |
+|   10497 | King      | Robert    |
+|   10507 | King      | Robert    |
+|   10512 | King      | Robert    |
+|   10513 | King      | Robert    |
+|   10520 | King      | Robert    |
+|   10523 | King      | Robert    |
+|   10527 | King      | Robert    |
+|   10531 | King      | Robert    |
+|   10532 | King      | Robert    |
+|   10550 | King      | Robert    |
+|   10573 | King      | Robert    |
+|   10585 | King      | Robert    |
+|   10593 | King      | Robert    |
+|   10597 | King      | Robert    |
+|   10601 | King      | Robert    |
+|   10609 | King      | Robert    |
+|   10633 | King      | Robert    |
+|   10639 | King      | Robert    |
+|   10642 | King      | Robert    |
+|   10659 | King      | Robert    |
+|   10661 | King      | Robert    |
+|   10666 | King      | Robert    |
+|   10667 | King      | Robert    |
+|   10678 | King      | Robert    |
+|   10695 | King      | Robert    |
+|   10731 | King      | Robert    |
+|   10775 | King      | Robert    |
+|   10777 | King      | Robert    |
+|   10797 | King      | Robert    |
+|   10809 | King      | Robert    |
+|   10818 | King      | Robert    |
+|   10836 | King      | Robert    |
+|   10848 | King      | Robert    |
+|   10868 | King      | Robert    |
+|   10876 | King      | Robert    |
+|   10880 | King      | Robert    |
+|   10890 | King      | Robert    |
+|   10891 | King      | Robert    |
+|   10896 | King      | Robert    |
+|   10923 | King      | Robert    |
+|   10937 | King      | Robert    |
+|   10941 | King      | Robert    |
+|   10958 | King      | Robert    |
+|   10993 | King      | Robert    |
+|   11008 | King      | Robert    |
+|   11030 | King      | Robert    |
+|   11033 | King      | Robert    |
+|   11037 | King      | Robert    |
+|   11047 | King      | Robert    |
+|   11048 | King      | Robert    |
+|   11051 | King      | Robert    |
+|   11055 | King      | Robert    |
+|   11066 | King      | Robert    |
+|   11074 | King      | Robert    |
+|   10262 | Callahan  | Laura     |
+|   10268 | Callahan  | Laura     |
+|   10276 | Callahan  | Laura     |
+|   10278 | Callahan  | Laura     |
+|   10279 | Callahan  | Laura     |
+|   10286 | Callahan  | Laura     |
+|   10287 | Callahan  | Laura     |
+|   10290 | Callahan  | Laura     |
+|   10301 | Callahan  | Laura     |
+|   10305 | Callahan  | Laura     |
+|   10310 | Callahan  | Laura     |
+|   10318 | Callahan  | Laura     |
+|   10334 | Callahan  | Laura     |
+|   10354 | Callahan  | Laura     |
+|   10366 | Callahan  | Laura     |
+|   10369 | Callahan  | Laura     |
+|   10380 | Callahan  | Laura     |
+|   10383 | Callahan  | Laura     |
+|   10399 | Callahan  | Laura     |
+|   10402 | Callahan  | Laura     |
+|   10408 | Callahan  | Laura     |
+|   10412 | Callahan  | Laura     |
+|   10416 | Callahan  | Laura     |
+|   10421 | Callahan  | Laura     |
+|   10435 | Callahan  | Laura     |
+|   10437 | Callahan  | Laura     |
+|   10443 | Callahan  | Laura     |
+|   10450 | Callahan  | Laura     |
+|   10452 | Callahan  | Laura     |
+|   10455 | Callahan  | Laura     |
+|   10456 | Callahan  | Laura     |
+|   10460 | Callahan  | Laura     |
+|   10467 | Callahan  | Laura     |
+|   10472 | Callahan  | Laura     |
+|   10476 | Callahan  | Laura     |
+|   10481 | Callahan  | Laura     |
+|   10488 | Callahan  | Laura     |
+|   10491 | Callahan  | Laura     |
+|   10498 | Callahan  | Laura     |
+|   10521 | Callahan  | Laura     |
+|   10533 | Callahan  | Laura     |
+|   10534 | Callahan  | Laura     |
+|   10543 | Callahan  | Laura     |
+|   10545 | Callahan  | Laura     |
+|   10560 | Callahan  | Laura     |
+|   10565 | Callahan  | Laura     |
+|   10571 | Callahan  | Laura     |
+|   10589 | Callahan  | Laura     |
+|   10596 | Callahan  | Laura     |
+|   10602 | Callahan  | Laura     |
+|   10603 | Callahan  | Laura     |
+|   10610 | Callahan  | Laura     |
+|   10614 | Callahan  | Laura     |
+|   10623 | Callahan  | Laura     |
+|   10627 | Callahan  | Laura     |
+|   10631 | Callahan  | Laura     |
+|   10632 | Callahan  | Laura     |
+|   10635 | Callahan  | Laura     |
+|   10651 | Callahan  | Laura     |
+|   10660 | Callahan  | Laura     |
+|   10679 | Callahan  | Laura     |
+|   10694 | Callahan  | Laura     |
+|   10696 | Callahan  | Laura     |
+|   10706 | Callahan  | Laura     |
+|   10719 | Callahan  | Laura     |
+|   10720 | Callahan  | Laura     |
+|   10722 | Callahan  | Laura     |
+|   10724 | Callahan  | Laura     |
+|   10729 | Callahan  | Laura     |
+|   10756 | Callahan  | Laura     |
+|   10770 | Callahan  | Laura     |
+|   10786 | Callahan  | Laura     |
+|   10795 | Callahan  | Laura     |
+|   10811 | Callahan  | Laura     |
+|   10824 | Callahan  | Laura     |
+|   10844 | Callahan  | Laura     |
+|   10845 | Callahan  | Laura     |
+|   10852 | Callahan  | Laura     |
+|   10857 | Callahan  | Laura     |
+|   10862 | Callahan  | Laura     |
+|   10883 | Callahan  | Laura     |
+|   10887 | Callahan  | Laura     |
+|   10932 | Callahan  | Laura     |
+|   10940 | Callahan  | Laura     |
+|   10955 | Callahan  | Laura     |
+|   10957 | Callahan  | Laura     |
+|   10961 | Callahan  | Laura     |
+|   10962 | Callahan  | Laura     |
+|   10977 | Callahan  | Laura     |
+|   10979 | Callahan  | Laura     |
+|   10986 | Callahan  | Laura     |
+|   10987 | Callahan  | Laura     |
+|   10997 | Callahan  | Laura     |
+|   10998 | Callahan  | Laura     |
+|   11007 | Callahan  | Laura     |
+|   11034 | Callahan  | Laura     |
+|   11036 | Callahan  | Laura     |
+|   11046 | Callahan  | Laura     |
+|   11050 | Callahan  | Laura     |
+|   11054 | Callahan  | Laura     |
+|   11056 | Callahan  | Laura     |
+|   11065 | Callahan  | Laura     |
+|   11068 | Callahan  | Laura     |
+|   11075 | Callahan  | Laura     |
+|   10255 | Dodsworth | Anne      |
+|   10263 | Dodsworth | Anne      |
+|   10324 | Dodsworth | Anne      |
+|   10331 | Dodsworth | Anne      |
+|   10386 | Dodsworth | Anne      |
+|   10411 | Dodsworth | Anne      |
+|   10475 | Dodsworth | Anne      |
+|   10501 | Dodsworth | Anne      |
+|   10506 | Dodsworth | Anne      |
+|   10538 | Dodsworth | Anne      |
+|   10557 | Dodsworth | Anne      |
+|   10566 | Dodsworth | Anne      |
+|   10577 | Dodsworth | Anne      |
+|   10586 | Dodsworth | Anne      |
+|   10646 | Dodsworth | Anne      |
+|   10672 | Dodsworth | Anne      |
+|   10687 | Dodsworth | Anne      |
+|   10705 | Dodsworth | Anne      |
+|   10736 | Dodsworth | Anne      |
+|   10745 | Dodsworth | Anne      |
+|   10750 | Dodsworth | Anne      |
+|   10771 | Dodsworth | Anne      |
+|   10782 | Dodsworth | Anne      |
+|   10799 | Dodsworth | Anne      |
+|   10828 | Dodsworth | Anne      |
+|   10829 | Dodsworth | Anne      |
+|   10837 | Dodsworth | Anne      |
+|   10849 | Dodsworth | Anne      |
+|   10853 | Dodsworth | Anne      |
+|   10871 | Dodsworth | Anne      |
+|   10889 | Dodsworth | Anne      |
+|   10893 | Dodsworth | Anne      |
+|   10905 | Dodsworth | Anne      |
+|   10942 | Dodsworth | Anne      |
+|   10951 | Dodsworth | Anne      |
+|   10953 | Dodsworth | Anne      |
+|   10963 | Dodsworth | Anne      |
+|   10970 | Dodsworth | Anne      |
+|   10978 | Dodsworth | Anne      |
+|   11016 | Dodsworth | Anne      |
+|   11017 | Dodsworth | Anne      |
+|   11022 | Dodsworth | Anne      |
+|   11058 | Dodsworth | Anne      |
++---------+-----------+-----------+
+830 rows in set (0.0347 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL >

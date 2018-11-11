@@ -1,0 +1,491 @@
+EVA2_3_INNER_JOIN
+
+
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': *********
+MySQL Error 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': *********
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 60
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > \use northwind
+Default schema set to `northwind`.
+Fetching table and column names from `northwind` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.productname, b.categoryname from product a
+                                         ... inner join categories b
+                                         ... on a.categoryid = b.categoryid;
+ERROR: 1146 (42S02): Table 'northwind.product' doesn't exist
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.productname, b.categoryname from products a inner join categories b on a.categoryid = b.categoryid;
++----------------------------------+----------------+
+| productname                      | categoryname   |
++----------------------------------+----------------+
+| Chai                             | Beverages      |
+| Chang                            | Beverages      |
+| Guaran Fantstica                 | Beverages      |
+| Sasquatch Ale                    | Beverages      |
+| Steeleye Stout                   | Beverages      |
+| Cte de Blaye                     | Beverages      |
+| Chartreuse verte                 | Beverages      |
+| Ipoh Coffee                      | Beverages      |
+| Laughing Lumberjack Lager        | Beverages      |
+| Outback Lager                    | Beverages      |
+| Rhnbru Klosterbier               | Beverages      |
+| Lakkalikri                       | Beverages      |
+| Aniseed Syrup                    | Condiments     |
+| Chef Anton's Cajun Seasoning     | Condiments     |
+| Chef Anton's Gumbo Mix           | Condiments     |
+| Grandma's Boysenberry Spread     | Condiments     |
+| Northwoods Cranberry Sauce       | Condiments     |
+| Genen Shouyu                     | Condiments     |
+| Gula Malacca                     | Condiments     |
+| Sirop d'rable                    | Condiments     |
+| Vegie-spread                     | Condiments     |
+| Louisiana Fiery Hot Pepper Sauce | Condiments     |
+| Louisiana Hot Spiced Okra        | Condiments     |
+| Original Frankfurter grne Soe    | Condiments     |
+| Tacos                            | Condiments     |
+| Pavlova                          | Confections    |
+| Teatime Chocolate Biscuits       | Confections    |
+| Sir Rodney's Marmalade           | Confections    |
+| Sir Rodney's Scones              | Confections    |
+| NuNuCa Nu-Nougat-Creme           | Confections    |
+| Gumbr Gummibrchen                | Confections    |
+| Schoggi Schokolade               | Confections    |
+| Zaanse koeken                    | Confections    |
+| Chocolade                        | Confections    |
+| Maxilaku                         | Confections    |
+| Valkoinen suklaa                 | Confections    |
+| Tarte au sucre                   | Confections    |
+| Scottish Longbreads              | Confections    |
+| Queso Cabrales                   | Dairy Products |
+| Queso Manchego La Pastora        | Dairy Products |
+| Gorgonzola Telino                | Dairy Products |
+| Mascarpone Fabioli               | Dairy Products |
+| Geitost                          | Dairy Products |
+| Raclette Courdavault             | Dairy Products |
+| Camembert Pierrot                | Dairy Products |
+| Gudbrandsdalsost                 | Dairy Products |
+| Flotemysost                      | Dairy Products |
+| Mozzarella di Giovanni           | Dairy Products |
+| Gustaf's Knckebrd                | Grains/Cereals |
+| Tunnbrd                          | Grains/Cereals |
+| Singaporean Hokkien Fried Mee    | Grains/Cereals |
+| Filo Mix                         | Grains/Cereals |
+| Gnocchi di nonna Alice           | Grains/Cereals |
+| Ravioli Angelo                   | Grains/Cereals |
+| Wimmers gute Semmelkndel         | Grains/Cereals |
+| Mishi Kobe Niku                  | Meat/Poultry   |
+| Alice Mutton                     | Meat/Poultry   |
+| Thringer Rostbratwurst           | Meat/Poultry   |
+| Perth Pasties                    | Meat/Poultry   |
+| Tourtire                         | Meat/Poultry   |
+| Pt chinois                       | Meat/Poultry   |
+| Uncle Bob's Organic Dried Pears  | Produce        |
+| Tofu                             | Produce        |
+| Rssle Sauerkraut                 | Produce        |
+| Manjimup Dried Apples            | Produce        |
+| Longlife Tofu                    | Produce        |
+| Ikura                            | Seafood        |
+| Konbu                            | Seafood        |
+| Carnarvon Tigers                 | Seafood        |
+| Nord-Ost Matjeshering            | Seafood        |
+| Inlagd Sill                      | Seafood        |
+| Gravad lax                       | Seafood        |
+| Boston Crab Meat                 | Seafood        |
+| Jack's New England Clam Chowder  | Seafood        |
+| Rogede sild                      | Seafood        |
+| Spegesild                        | Seafood        |
+| Escargots de Bourgogne           | Seafood        |
+| Rd Kaviar                        | Seafood        |
++----------------------------------+----------------+
+78 rows in set (0.0011 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc products;
++-----------------+---------------+------+-----+---------+----------------+
+| Field           | Type          | Null | Key | Default | Extra          |
++-----------------+---------------+------+-----+---------+----------------+
+| ProductID       | int(11)       | NO   | PRI | NULL    | auto_increment |
+| ProductName     | varchar(40)   | NO   | MUL | NULL    |                |
+| SupplierID      | int(11)       | YES  | MUL | NULL    |                |
+| CategoryID      | int(11)       | YES  | MUL | NULL    |                |
+| QuantityPerUnit | varchar(20)   | YES  |     | NULL    |                |
+| UnitPrice       | decimal(10,4) | YES  |     | 0.0000  |                |
+| UnitsInStock    | smallint(2)   | YES  |     | 0       |                |
+| UnitsOnOrder    | smallint(2)   | YES  |     | 0       |                |
+| ReorderLevel    | smallint(2)   | YES  |     | 0       |                |
+| Discontinued    | bit(1)        | NO   |     | b'0'    |                |
++-----------------+---------------+------+-----+---------+----------------+
+10 rows in set (0.0383 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc suppliers;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| SupplierID   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| CompanyName  | varchar(40) | NO   | MUL | NULL    |                |
+| ContactName  | varchar(30) | YES  |     | NULL    |                |
+| ContactTitle | varchar(30) | YES  |     | NULL    |                |
+| Address      | varchar(60) | YES  |     | NULL    |                |
+| City         | varchar(15) | YES  |     | NULL    |                |
+| Region       | varchar(15) | YES  |     | NULL    |                |
+| PostalCode   | varchar(10) | YES  | MUL | NULL    |                |
+| Country      | varchar(15) | YES  |     | NULL    |                |
+| Phone        | varchar(24) | YES  |     | NULL    |                |
+| Fax          | varchar(24) | YES  |     | NULL    |                |
+| HomePage     | mediumtext  | YES  |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+12 rows in set (0.0017 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.productname, b.companyname from products a
+                                         ... inner join supplier b
+                                         ... on a.supplierid = b.supplierid;
+ERROR: 1146 (42S02): Table 'northwind.supplier' doesn't exist
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.productname, b.companyname from products a inner join suppliers b on a.supplierid = b.supplierid;
++----------------------------------+----------------------------------------+
+| productname                      | companyname                            |
++----------------------------------+----------------------------------------+
+| Cte de Blaye                     | Aux joyeux ecclsiastiques              |
+| Chartreuse verte                 | Aux joyeux ecclsiastiques              |
+| Sasquatch Ale                    | Bigfoot Breweries                      |
+| Steeleye Stout                   | Bigfoot Breweries                      |
+| Laughing Lumberjack Lager        | Bigfoot Breweries                      |
+| Queso Cabrales                   | Cooperativa de Quesos 'Las Cabras'     |
+| Queso Manchego La Pastora        | Cooperativa de Quesos 'Las Cabras'     |
+| Escargots de Bourgogne           | Escargots Nouveaux                     |
+| Chai                             | Exotic Liquids                         |
+| Chang                            | Exotic Liquids                         |
+| Aniseed Syrup                    | Exotic Liquids                         |
+| Gorgonzola Telino                | Formaggi Fortini s.r.l.                |
+| Mascarpone Fabioli               | Formaggi Fortini s.r.l.                |
+| Mozzarella di Giovanni           | Formaggi Fortini s.r.l.                |
+| Sirop d'rable                    | Forts d'rables                         |
+| Tarte au sucre                   | Forts d'rables                         |
+| Manjimup Dried Apples            | G'day, Mate                            |
+| Filo Mix                         | G'day, Mate                            |
+| Perth Pasties                    | G'day, Mate                            |
+| Raclette Courdavault             | Gai pturage                            |
+| Camembert Pierrot                | Gai pturage                            |
+| Grandma's Boysenberry Spread     | Grandma Kelly's Homestead              |
+| Uncle Bob's Organic Dried Pears  | Grandma Kelly's Homestead              |
+| Northwoods Cranberry Sauce       | Grandma Kelly's Homestead              |
+| NuNuCa Nu-Nougat-Creme           | Heli Swaren GmbH & Co. KG              |
+| Gumbr Gummibrchen                | Heli Swaren GmbH & Co. KG              |
+| Schoggi Schokolade               | Heli Swaren GmbH & Co. KG              |
+| Maxilaku                         | Karkki Oy                              |
+| Valkoinen suklaa                 | Karkki Oy                              |
+| Lakkalikri                       | Karkki Oy                              |
+| Singaporean Hokkien Fried Mee    | Leka Trading                           |
+| Ipoh Coffee                      | Leka Trading                           |
+| Gula Malacca                     | Leka Trading                           |
+| Rogede sild                      | Lyngbysild                             |
+| Spegesild                        | Lyngbysild                             |
+| Tourtire                         | Ma Maison                              |
+| Pt chinois                       | Ma Maison                              |
+| Konbu                            | Mayumi's                               |
+| Tofu                             | Mayumi's                               |
+| Genen Shouyu                     | Mayumi's                               |
+| Boston Crab Meat                 | New England Seafood Cannery            |
+| Jack's New England Clam Chowder  | New England Seafood Cannery            |
+| Chef Anton's Cajun Seasoning     | New Orleans Cajun Delights             |
+| Chef Anton's Gumbo Mix           | New Orleans Cajun Delights             |
+| Louisiana Fiery Hot Pepper Sauce | New Orleans Cajun Delights             |
+| Louisiana Hot Spiced Okra        | New Orleans Cajun Delights             |
+| Nord-Ost Matjeshering            | Nord-Ost-Fisch Handelsgesellschaft mbH |
+| Geitost                          | Norske Meierier                        |
+| Gudbrandsdalsost                 | Norske Meierier                        |
+| Flotemysost                      | Norske Meierier                        |
+| Gnocchi di nonna Alice           | Pasta Buttini s.r.l.                   |
+| Ravioli Angelo                   | Pasta Buttini s.r.l.                   |
+| Pavlova                          | Pavlova, Ltd.                          |
+| Alice Mutton                     | Pavlova, Ltd.                          |
+| Carnarvon Tigers                 | Pavlova, Ltd.                          |
+| Vegie-spread                     | Pavlova, Ltd.                          |
+| Outback Lager                    | Pavlova, Ltd.                          |
+| Gustaf's Knckebrd                | PB Knckebrd AB                         |
+| Tunnbrd                          | PB Knckebrd AB                         |
+| Rssle Sauerkraut                 | Plutzer Lebensmittelgromrkte AG        |
+| Thringer Rostbratwurst           | Plutzer Lebensmittelgromrkte AG        |
+| Wimmers gute Semmelkndel         | Plutzer Lebensmittelgromrkte AG        |
+| Rhnbru Klosterbier               | Plutzer Lebensmittelgromrkte AG        |
+| Original Frankfurter grne Soe    | Plutzer Lebensmittelgromrkte AG        |
+| Tacos                            | Plutzer Lebensmittelgromrkte AG        |
+| Guaran Fantstica                 | Refrescos Americanas LTDA              |
+| Teatime Chocolate Biscuits       | Specialty Biscuits, Ltd.               |
+| Sir Rodney's Marmalade           | Specialty Biscuits, Ltd.               |
+| Sir Rodney's Scones              | Specialty Biscuits, Ltd.               |
+| Scottish Longbreads              | Specialty Biscuits, Ltd.               |
+| Inlagd Sill                      | Svensk Sjfda AB                        |
+| Gravad lax                       | Svensk Sjfda AB                        |
+| Rd Kaviar                        | Svensk Sjfda AB                        |
+| Mishi Kobe Niku                  | Tokyo Traders                          |
+| Ikura                            | Tokyo Traders                          |
+| Longlife Tofu                    | Tokyo Traders                          |
+| Zaanse koeken                    | Zaanse Snoepfabriek                    |
+| Chocolade                        | Zaanse Snoepfabriek                    |
++----------------------------------+----------------------------------------+
+78 rows in set (0.0586 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.productname, b.categoryname, c.companyname
+                                         ... from products a
+                                         ... inner join categories b on a.categoryid = b.categoryid
+                                         ... inner join suppliers c on a.supplierid = c.supplierid;
++----------------------------------+----------------+----------------------------------------+
+| productname                      | categoryname   | companyname                            |
++----------------------------------+----------------+----------------------------------------+
+| Cte de Blaye                     | Beverages      | Aux joyeux ecclsiastiques              |
+| Chartreuse verte                 | Beverages      | Aux joyeux ecclsiastiques              |
+| Sasquatch Ale                    | Beverages      | Bigfoot Breweries                      |
+| Steeleye Stout                   | Beverages      | Bigfoot Breweries                      |
+| Laughing Lumberjack Lager        | Beverages      | Bigfoot Breweries                      |
+| Queso Cabrales                   | Dairy Products | Cooperativa de Quesos 'Las Cabras'     |
+| Queso Manchego La Pastora        | Dairy Products | Cooperativa de Quesos 'Las Cabras'     |
+| Escargots de Bourgogne           | Seafood        | Escargots Nouveaux                     |
+| Chai                             | Beverages      | Exotic Liquids                         |
+| Chang                            | Beverages      | Exotic Liquids                         |
+| Aniseed Syrup                    | Condiments     | Exotic Liquids                         |
+| Gorgonzola Telino                | Dairy Products | Formaggi Fortini s.r.l.                |
+| Mascarpone Fabioli               | Dairy Products | Formaggi Fortini s.r.l.                |
+| Mozzarella di Giovanni           | Dairy Products | Formaggi Fortini s.r.l.                |
+| Sirop d'rable                    | Condiments     | Forts d'rables                         |
+| Tarte au sucre                   | Confections    | Forts d'rables                         |
+| Manjimup Dried Apples            | Produce        | G'day, Mate                            |
+| Filo Mix                         | Grains/Cereals | G'day, Mate                            |
+| Perth Pasties                    | Meat/Poultry   | G'day, Mate                            |
+| Raclette Courdavault             | Dairy Products | Gai pturage                            |
+| Camembert Pierrot                | Dairy Products | Gai pturage                            |
+| Grandma's Boysenberry Spread     | Condiments     | Grandma Kelly's Homestead              |
+| Uncle Bob's Organic Dried Pears  | Produce        | Grandma Kelly's Homestead              |
+| Northwoods Cranberry Sauce       | Condiments     | Grandma Kelly's Homestead              |
+| NuNuCa Nu-Nougat-Creme           | Confections    | Heli Swaren GmbH & Co. KG              |
+| Gumbr Gummibrchen                | Confections    | Heli Swaren GmbH & Co. KG              |
+| Schoggi Schokolade               | Confections    | Heli Swaren GmbH & Co. KG              |
+| Maxilaku                         | Confections    | Karkki Oy                              |
+| Valkoinen suklaa                 | Confections    | Karkki Oy                              |
+| Lakkalikri                       | Beverages      | Karkki Oy                              |
+| Singaporean Hokkien Fried Mee    | Grains/Cereals | Leka Trading                           |
+| Ipoh Coffee                      | Beverages      | Leka Trading                           |
+| Gula Malacca                     | Condiments     | Leka Trading                           |
+| Rogede sild                      | Seafood        | Lyngbysild                             |
+| Spegesild                        | Seafood        | Lyngbysild                             |
+| Tourtire                         | Meat/Poultry   | Ma Maison                              |
+| Pt chinois                       | Meat/Poultry   | Ma Maison                              |
+| Konbu                            | Seafood        | Mayumi's                               |
+| Tofu                             | Produce        | Mayumi's                               |
+| Genen Shouyu                     | Condiments     | Mayumi's                               |
+| Boston Crab Meat                 | Seafood        | New England Seafood Cannery            |
+| Jack's New England Clam Chowder  | Seafood        | New England Seafood Cannery            |
+| Chef Anton's Cajun Seasoning     | Condiments     | New Orleans Cajun Delights             |
+| Chef Anton's Gumbo Mix           | Condiments     | New Orleans Cajun Delights             |
+| Louisiana Fiery Hot Pepper Sauce | Condiments     | New Orleans Cajun Delights             |
+| Louisiana Hot Spiced Okra        | Condiments     | New Orleans Cajun Delights             |
+| Nord-Ost Matjeshering            | Seafood        | Nord-Ost-Fisch Handelsgesellschaft mbH |
+| Geitost                          | Dairy Products | Norske Meierier                        |
+| Gudbrandsdalsost                 | Dairy Products | Norske Meierier                        |
+| Flotemysost                      | Dairy Products | Norske Meierier                        |
+| Gnocchi di nonna Alice           | Grains/Cereals | Pasta Buttini s.r.l.                   |
+| Ravioli Angelo                   | Grains/Cereals | Pasta Buttini s.r.l.                   |
+| Pavlova                          | Confections    | Pavlova, Ltd.                          |
+| Alice Mutton                     | Meat/Poultry   | Pavlova, Ltd.                          |
+| Carnarvon Tigers                 | Seafood        | Pavlova, Ltd.                          |
+| Vegie-spread                     | Condiments     | Pavlova, Ltd.                          |
+| Outback Lager                    | Beverages      | Pavlova, Ltd.                          |
+| Gustaf's Knckebrd                | Grains/Cereals | PB Knckebrd AB                         |
+| Tunnbrd                          | Grains/Cereals | PB Knckebrd AB                         |
+| Rssle Sauerkraut                 | Produce        | Plutzer Lebensmittelgromrkte AG        |
+| Thringer Rostbratwurst           | Meat/Poultry   | Plutzer Lebensmittelgromrkte AG        |
+| Wimmers gute Semmelkndel         | Grains/Cereals | Plutzer Lebensmittelgromrkte AG        |
+| Rhnbru Klosterbier               | Beverages      | Plutzer Lebensmittelgromrkte AG        |
+| Original Frankfurter grne Soe    | Condiments     | Plutzer Lebensmittelgromrkte AG        |
+| Tacos                            | Condiments     | Plutzer Lebensmittelgromrkte AG        |
+| Guaran Fantstica                 | Beverages      | Refrescos Americanas LTDA              |
+| Teatime Chocolate Biscuits       | Confections    | Specialty Biscuits, Ltd.               |
+| Sir Rodney's Marmalade           | Confections    | Specialty Biscuits, Ltd.               |
+| Sir Rodney's Scones              | Confections    | Specialty Biscuits, Ltd.               |
+| Scottish Longbreads              | Confections    | Specialty Biscuits, Ltd.               |
+| Inlagd Sill                      | Seafood        | Svensk Sjfda AB                        |
+| Gravad lax                       | Seafood        | Svensk Sjfda AB                        |
+| Rd Kaviar                        | Seafood        | Svensk Sjfda AB                        |
+| Mishi Kobe Niku                  | Meat/Poultry   | Tokyo Traders                          |
+| Ikura                            | Seafood        | Tokyo Traders                          |
+| Longlife Tofu                    | Produce        | Tokyo Traders                          |
+| Zaanse koeken                    | Confections    | Zaanse Snoepfabriek                    |
+| Chocolade                        | Confections    | Zaanse Snoepfabriek                    |
++----------------------------------+----------------+----------------------------------------+
+78 rows in set (0.0282 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > show tables;
++----------------------+
+| Tables_in_northwind  |
++----------------------+
+| account              |
+| categories           |
+| customercustomerdemo |
+| customerdemographics |
+| customers            |
+| empleados            |
+| employees            |
+| employees_copia      |
+| employeeterritories  |
+| lista_empleados      |
+| lista_empleados_a    |
+| nombre_cliente       |
+| orderdetails         |
+| orders               |
+| pagos_empleados      |
+| personas             |
+| products             |
+| prueba2              |
+| region               |
+| rfc_gringos          |
+| shippers             |
+| suppliers            |
+| temp_customer        |
+| territories          |
+| ventas_producto      |
++----------------------+
+25 rows in set (0.0019 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc orders;
++----------------+---------------+------+-----+---------+----------------+
+| Field          | Type          | Null | Key | Default | Extra          |
++----------------+---------------+------+-----+---------+----------------+
+| OrderID        | int(11)       | NO   | PRI | NULL    | auto_increment |
+| CustomerID     | varchar(5)    | YES  | MUL | NULL    |                |
+| EmployeeID     | int(11)       | YES  | MUL | NULL    |                |
+| OrderDate      | datetime      | YES  | MUL | NULL    |                |
+| RequiredDate   | datetime      | YES  |     | NULL    |                |
+| ShippedDate    | datetime      | YES  | MUL | NULL    |                |
+| ShipVia        | int(11)       | YES  | MUL | NULL    |                |
+| Freight        | decimal(10,4) | YES  |     | 0.0000  |                |
+| ShipName       | varchar(40)   | YES  |     | NULL    |                |
+| ShipAddress    | varchar(60)   | YES  |     | NULL    |                |
+| ShipCity       | varchar(15)   | YES  |     | NULL    |                |
+| ShipRegion     | varchar(15)   | YES  |     | NULL    |                |
+| ShipPostalCode | varchar(10)   | YES  | MUL | NULL    |                |
+| ShipCountry    | varchar(15)   | YES  |     | NULL    |                |
++----------------+---------------+------+-----+---------+----------------+
+14 rows in set (0.0017 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select orderid, customerid, employeeid from orders limit 20;
++---------+------------+------------+
+| orderid | customerid | employeeid |
++---------+------------+------------+
+|   10248 | VINET      |          5 |
+|   10249 | TOMSP      |          6 |
+|   10250 | HANAR      |          4 |
+|   10251 | VICTE      |          3 |
+|   10252 | SUPRD      |          4 |
+|   10253 | HANAR      |          3 |
+|   10254 | CHOPS      |          5 |
+|   10255 | RICSU      |          9 |
+|   10256 | WELLI      |          3 |
+|   10257 | HILAA      |          4 |
+|   10258 | ERNSH      |          1 |
+|   10259 | CENTC      |          4 |
+|   10260 | OTTIK      |          4 |
+|   10261 | QUEDE      |          4 |
+|   10262 | RATTC      |          8 |
+|   10263 | ERNSH      |          9 |
+|   10264 | FOLKO      |          6 |
+|   10265 | BLONP      |          2 |
+|   10266 | WARTH      |          3 |
+|   10267 | FRANK      |          4 |
++---------+------------+------------+
+20 rows in set (0.0372 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.orderid, b.companyname, c.lastname from orders a
+                                         ... inner join customers b on a.customerid = b.customerid
+                                         ... inner join employees c on a.employeeid = c.employeeid limit 10;
++---------+---------------------------+----------+
+| orderid | companyname               | lastname |
++---------+---------------------------+----------+
+|   10248 | Vins et alcools Chevalier | Buchanan |
+|   10254 | Chop-suey Chinese         | Buchanan |
+|   10269 | White Clover Markets      | Buchanan |
+|   10297 | Blondesddsl pre et fils   | Buchanan |
+|   10320 | Wartian Herkku            | Buchanan |
+|   10333 | Wartian Herkku            | Buchanan |
+|   10358 | La maison d'Asie          | Buchanan |
+|   10359 | Seven Seas Imports        | Buchanan |
+|   10372 | Queen Cozinha             | Buchanan |
+|   10378 | Folk och f HB             | Buchanan |
++---------+---------------------------+----------+
+10 rows in set (0.2107 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > desc orderdetails;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| OrderID   | int(11)       | NO   | PRI | NULL    |       |
+| ProductID | int(11)       | NO   | PRI | NULL    |       |
+| UnitPrice | decimal(10,4) | NO   |     | 0.0000  |       |
+| Quantity  | smallint(2)   | NO   |     | 1       |       |
+| Discount  | double(8,0)   | NO   |     | 0       |       |
++-----------+---------------+------+-----+---------+-------+
+5 rows in set (0.0017 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select orderid, productid, (unitprice * quantity) as total from orderdetails limit 10;
++---------+-----------+-----------+
+| orderid | productid | total     |
++---------+-----------+-----------+
+|   10248 |        11 |  168.0000 |
+|   10248 |        42 |   98.0000 |
+|   10248 |        72 |  174.0000 |
+|   10249 |        14 |  167.4000 |
+|   10249 |        51 | 1696.0000 |
+|   10250 |        41 |   77.0000 |
+|   10250 |        51 | 1484.0000 |
+|   10250 |        65 |  252.0000 |
+|   10251 |        22 |  100.8000 |
+|   10251 |        57 |  234.0000 |
++---------+-----------+-----------+
+10 rows in set (0.0100 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL > select a.orderid, b.productname, (a.unitprice * a.quantity) as total from orderdetails a
+                                         ... inner join products b on a.productid = b.productid limit 10;
++---------+----------------------------------+-----------+
+| orderid | productname                      | total     |
++---------+----------------------------------+-----------+
+|   10248 | Queso Cabrales                   |  168.0000 |
+|   10248 | Singaporean Hokkien Fried Mee    |   98.0000 |
+|   10248 | Mozzarella di Giovanni           |  174.0000 |
+|   10249 | Tofu                             |  167.4000 |
+|   10249 | Manjimup Dried Apples            | 1696.0000 |
+|   10250 | Jack's New England Clam Chowder  |   77.0000 |
+|   10250 | Manjimup Dried Apples            | 1484.0000 |
+|   10250 | Louisiana Fiery Hot Pepper Sauce |  252.0000 |
+|   10251 | Gustaf's Knckebrd                |  100.8000 |
+|   10251 | Ravioli Angelo                   |  234.0000 |
++---------+----------------------------------+-----------+
+10 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  northwind  SQL >
+
+
+

@@ -1,0 +1,192 @@
+Practicas
+
+1. Cliente que más compra (dinero)
+	
+	select a.customerid, a.companyname, sum(c.unitprice * c.quantity) as total from customers a
+
+	inner join orders b on a.customerid = b.customerid
+	
+inner join orderdetails c on b.orderid = c.orderid
+	
+group by a.customerid
+
+	order by  total desc limit 1;
+
+
+	+------------+-------------+-------------+
+	| customerid | companyname | total       |
+	+------------+-------------+-------------+
+	| QUICK      | QUICK-Stop  | 117483.3900 |
+	+------------+-------------+-------------+
+	1 row in set (0.0059 sec)
+
+2. Cliente que menos compra (dinero)
+
+	select a.customerid, a.companyname, sum(c.unitprice * c.quantity) as total from customers a
+
+	inner join orders b on a.customerid = b.customerid
+	
+inner join orderdetails c on b.orderid = c.orderid
+	
+group by a.customerid
+
+	order by  total asc limit 1;
+
+
+	+------------+----------------------------+----------+
+	| customerid | companyname                | total    |
+	+------------+----------------------------+----------+
+	| CENTC      | Centro comercial Moctezuma | 100.8000 |
+	+------------+----------------------------+----------+
+	1 row in set (0.0035 sec)
+
+3. Producto más vendido (cantidad)
+
+	select a.productid, a.productname, b.quantity from products a
+
+	inner join orderdetails b on b.productid = a.productid
+
+	group by productid
+
+	order by quantity desc limit 1;
+
+	+-----------+----------------------------+----------+
+	| productid | productname                | quantity |
+	+-----------+----------------------------+----------+
+	|         8 | Northwoods Cranberry Sauce |       70 |
+	+-----------+----------------------------+----------+
+	1 row in set (0.0037 sec)
+
+4. Producto más lucrativo (efectivo)
+
+	select a.productid, a.productname, b.quantity * b.UnitPrice as total from products a
+
+	inner join orderdetails b on b.productid = a.productid
+
+	group by a.productid
+
+	order by total desc limit 1;
+
+	+-----------+--------------+-----------+
+	| productid | productname  | total     |
+	+-----------+--------------+-----------+
+	|        38 | Cte de Blaye | 4216.0000 |
+	+-----------+--------------+-----------+
+	1 row in set (0.0033 sec)
+
+5. Producto menos lucrativo (efectivo)
+
+	select a.productid, a.productname, b.quantity * b.UnitPrice as total from products a
+
+	inner join orderdetails b on b.productid = a.productid
+
+	group by a.productid
+
+	order by total asc limit 1;
+
+	+-----------+----------------------------+--------+
+	| productid | productname                | total  |
+	+-----------+----------------------------+--------+
+	|        19 | Teatime Chocolate Biscuits | 7.3000 |
+	+-----------+----------------------------+--------+
+	1 row in set (0.0035 sec)
+
+6. Producto más comprado por el cliente que más compra
+
+	select a.productid, a.productname, b.quantity from products a
+	
+inner join orderdetails b on b.productid = a.productid
+	
+inner join orders c on c.orderid = b.orderid
+	
+where c.customerid = (select a.customerid from customers a
+	
+		inner join orders b on a.customerid = b.customerid
+	
+		inner join orderdetails c on b.orderid = c.orderid	
+	
+		group by a.customerid
+	
+		order by  sum(c.unitprice * c.quantity) desc limit 1)
+
+	group by productid
+
+	order by quantity desc limit 1;
+
+	+-----------+----------------------------+----------+
+	| productid | productname                | quantity |
+	+-----------+----------------------------+----------+
+	|        27 | Schoggi Schokolade         |      120 |
+	+-----------+----------------------------+----------+
+	1 row in set (0.0037 sec)
+
+7. Empleado con más ventas
+
+	select a.employeeid, a.lastname, count(b.orderid) as total from employees a
+	
+inner join orders b on a.employeeid = b.employeeid
+
+	group by employeeid
+
+	order by total desc limit 1;
+
+
+	+------------+----------+-------+
+	| employeeid | lastname | total |
+	+------------+----------+-------+
+	|          4 | Peacock  |   156 |
+	+------------+----------+-------+
+	1 row in set (0.0010 sec)
+
+8. Empleado con menos ventas
+
+	select a.employeeid, a.lastname, count(b.orderid) as total from employees a
+	
+inner join orders b on a.employeeid = b.employeeid
+
+	group by employeeid
+
+	order by total desc limit 1;
+
+
+	+------------+----------+-------+
+	| employeeid | lastname | total |
+	+------------+----------+-------+
+	|          5 | Buchanan |    42 |
+	+------------+----------+-------+
+	1 row in set (0.0014 sec)
+
+9. Proximas compras a proveedores (UnitsInStock = 0, UnitsOnOrder = 0)
+
+	select a.supplierid, a.companyname, b.UnitsInStock, b.UnitsOnOrder from suppliers a
+
+	inner join products b on a.supplierid = b.supplierid
+
+	where b.unitsinstock = 0 and b.unitsonorder = 0;
+
+	+------------+---------------------------------+--------------+--------------+
+	| supplierid | companyname                     | unitsinstock | unitsonorder |
+	+------------+---------------------------------+--------------+--------------+
+	|          2 | New Orleans Cajun Delights      |            0 |            0 |
+	|          7 | Pavlova, Ltd.                   |            0 |            0 |
+	|         12 | Plutzer Lebensmittelgromrkte AG |            0 |            0 |
+	|         24 | G'day, Mate                     |            0 |            0 |
+	+------------+---------------------------------+--------------+--------------+
+	4 rows in set (0.0011 sec)
+
+10. Proveedor al que se le compra más (UnitsOnOrder, UnitPrice)
+
+	select a.supplierid, a.companyname, (b.UnitsOnOrder * b.unitprice) as total from suppliers a
+
+	inner join products b on a.supplierid = b.supplierid
+	
+group by a.supplierid
+
+	order by total desc limit 1;
+
+	+------------+-------------+-----------+
+	| supplierid | companyname | total     |
+	+------------+-------------+-----------+
+	|         23 | Karkki Oy   | 1200.0000 |
+	+------------+-------------+-----------+
+	1 row in set (0.0011 sec)

@@ -1,0 +1,382 @@
+EVA2_1_PRODUCTO_CARTESIANO
+
+
+MySQL-> Álgebra relacional
+
+
+
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': *********
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 61
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > create database evaluacion_2;
+Query OK, 1 row affected (0.6472 sec)
+
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| evaluacion_1       |
+| evaluacion_2       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+8 rows in set (0.0007 sec)
+
+ MySQL  localhost:3306 ssl  SQL > create table A(
+                              ... nobre varchar(10));
+ERROR: 1046 (3D000): No database selected
+
+ MySQL  localhost:3306 ssl  SQL > \use evaluacion2
+MySQL Error 1049 (42000): ClassicSession.runSql: Unknown database 'evaluacion2'
+
+ MySQL  localhost:3306 ssl  SQL > \use evaluacion_2
+Default schema set to `evaluacion_2`.
+Fetching table and column names from `evaluacion_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > create table A( nobre varchar(10));
+Query OK, 0 rows affected (1.0536 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > create table B( nobre varchar(10));
+Query OK, 0 rows affected (0.4729 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > show tables;
++------------------------+
+| Tables_in_evaluacion_2 |
++------------------------+
+| a                      |
+| b                      |
++------------------------+
+2 rows in set (0.0014 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > insert into A(nombre) values ('1'),('2'),('3'),('4'),('5');
+ERROR: 1054 (42S22): Unknown column 'nombre' in 'field list'
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > alter table A change nobre nombre varchar(10);
+Query OK, 0 rows affected (0.1504 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > insert into A(nombre) values ('1'),('2'),('3'),('4'),('5');
+Query OK, 5 rows affected (0.2293 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > alter table B change nobre nombre varchar(10);
+Query OK, 0 rows affected (0.1910 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > insert into B(nombre) values ('A'),('B'),('C'),('D'),('E');
+Query OK, 5 rows affected (0.1399 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from A;
++--------+
+| nombre |
++--------+
+| 1      |
+| 2      |
+| 3      |
+| 4      |
+| 5      |
++--------+
+5 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from B;
++--------+
+| nombre |
++--------+
+| A      |
+| B      |
+| C      |
+| D      |
+| E      |
++--------+
+5 rows in set (0.0004 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from A,B;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| 1      | A      |
+| 2      | A      |
+| 3      | A      |
+| 4      | A      |
+| 5      | A      |
+| 1      | B      |
+| 2      | B      |
+| 3      | B      |
+| 4      | B      |
+| 5      | B      |
+| 1      | C      |
+| 2      | C      |
+| 3      | C      |
+| 4      | C      |
+| 5      | C      |
+| 1      | D      |
+| 2      | D      |
+| 3      | D      |
+| 4      | D      |
+| 5      | D      |
+| 1      | E      |
+| 2      | E      |
+| 3      | E      |
+| 4      | E      |
+| 5      | E      |
++--------+--------+
+25 rows in set (0.0004 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from B,A;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| A      | 1      |
+| B      | 1      |
+| C      | 1      |
+| D      | 1      |
+| E      | 1      |
+| A      | 2      |
+| B      | 2      |
+| C      | 2      |
+| D      | 2      |
+| E      | 2      |
+| A      | 3      |
+| B      | 3      |
+| C      | 3      |
+| D      | 3      |
+| E      | 3      |
+| A      | 4      |
+| B      | 4      |
+| C      | 4      |
+| D      | 4      |
+| E      | 4      |
+| A      | 5      |
+| B      | 5      |
+| C      | 5      |
+| D      | 5      |
+| E      | 5      |
++--------+--------+
+25 rows in set (0.0005 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select A.nombre, B.nombre from A,B;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| 1      | A      |
+| 2      | A      |
+| 3      | A      |
+| 4      | A      |
+| 5      | A      |
+| 1      | B      |
+| 2      | B      |
+| 3      | B      |
+| 4      | B      |
+| 5      | B      |
+| 1      | C      |
+| 2      | C      |
+| 3      | C      |
+| 4      | C      |
+| 5      | C      |
+| 1      | D      |
+| 2      | D      |
+| 3      | D      |
+| 4      | D      |
+| 5      | D      |
+| 1      | E      |
+| 2      | E      |
+| 3      | E      |
+| 4      | E      |
+| 5      | E      |
++--------+--------+
+25 rows in set (0.0005 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from A,B order by A.nombre;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| 1      | A      |
+| 1      | B      |
+| 1      | C      |
+| 1      | D      |
+| 1      | E      |
+| 2      | A      |
+| 2      | B      |
+| 2      | C      |
+| 2      | D      |
+| 2      | E      |
+| 3      | A      |
+| 3      | B      |
+| 3      | C      |
+| 3      | D      |
+| 3      | E      |
+| 4      | A      |
+| 4      | B      |
+| 4      | C      |
+| 4      | D      |
+| 4      | E      |
+| 5      | A      |
+| 5      | B      |
+| 5      | C      |
+| 5      | D      |
+| 5      | E      |
++--------+--------+
+25 rows in set (0.0281 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from A,B order by A.nombre, B.nombre;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| 1      | A      |
+| 1      | B      |
+| 1      | C      |
+| 1      | D      |
+| 1      | E      |
+| 2      | A      |
+| 2      | B      |
+| 2      | C      |
+| 2      | D      |
+| 2      | E      |
+| 3      | A      |
+| 3      | B      |
+| 3      | C      |
+| 3      | D      |
+| 3      | E      |
+| 4      | A      |
+| 4      | B      |
+| 4      | C      |
+| 4      | D      |
+| 4      | E      |
+| 5      | A      |
+| 5      | B      |
+| 5      | C      |
+| 5      | D      |
+| 5      | E      |
++--------+--------+
+25 rows in set (0.0005 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from A,B order by B.nombre, A.nombre;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| 1      | A      |
+| 2      | A      |
+| 3      | A      |
+| 4      | A      |
+| 5      | A      |
+| 1      | B      |
+| 2      | B      |
+| 3      | B      |
+| 4      | B      |
+| 5      | B      |
+| 1      | C      |
+| 2      | C      |
+| 3      | C      |
+| 4      | C      |
+| 5      | C      |
+| 1      | D      |
+| 2      | D      |
+| 3      | D      |
+| 4      | D      |
+| 5      | D      |
+| 1      | E      |
+| 2      | E      |
+| 3      | E      |
+| 4      | E      |
+| 5      | E      |
++--------+--------+
+25 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from B,A order by B.nombre, A.nombre;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| A      | 1      |
+| A      | 2      |
+| A      | 3      |
+| A      | 4      |
+| A      | 5      |
+| B      | 1      |
+| B      | 2      |
+| B      | 3      |
+| B      | 4      |
+| B      | 5      |
+| C      | 1      |
+| C      | 2      |
+| C      | 3      |
+| C      | 4      |
+| C      | 5      |
+| D      | 1      |
+| D      | 2      |
+| D      | 3      |
+| D      | 4      |
+| D      | 5      |
+| E      | 1      |
+| E      | 2      |
+| E      | 3      |
+| E      | 4      |
+| E      | 5      |
++--------+--------+
+25 rows in set (0.0005 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select B.nombre as nombre_B, a.nombre as nombre_A from B,A order by B.nombre, A.nombre;
++----------+----------+
+| nombre_B | nombre_A |
++----------+----------+
+| A        | 1        |
+| A        | 2        |
+| A        | 3        |
+| A        | 4        |
+| A        | 5        |
+| B        | 1        |
+| B        | 2        |
+| B        | 3        |
+| B        | 4        |
+| B        | 5        |
+| C        | 1        |
+| C        | 2        |
+| C        | 3        |
+| C        | 4        |
+| C        | 5        |
+| D        | 1        |
+| D        | 2        |
+| D        | 3        |
+| D        | 4        |
+| D        | 5        |
+| E        | 1        |
+| E        | 2        |
+| E        | 3        |
+| E        | 4        |
+| E        | 5        |
++----------+----------+
+25 rows in set (0.0007 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select B.nombre as nombre_B, a.nombre as nombre_A from B Tabla_B,A Tabla_A order by Tabla_B.nombre, Tabla_A.nombre;
+ERROR: 1054 (42S22): Unknown column 'B.nombre' in 'field list'
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL >

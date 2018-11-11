@@ -1,0 +1,138 @@
+EVA2_7_FULL_JOIN_EXCLUDING_INNER_JOIN
+
+
+
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': *********
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 154
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > \use evaluacion_2
+Default schema set to `evaluacion_2`.
+Fetching table and column names from `evaluacion_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > show tables;
++------------------------+
+| Tables_in_evaluacion_2 |
++------------------------+
+| a                      |
+| b                      |
+| tablaa                 |
+| tablab                 |
++------------------------+
+4 rows in set (0.0013 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A
+                                            ... left join tablab B on a.nombre = b.nombre;
++----+--------+------+--------+
+| id | nombre | id   | nombre |
++----+--------+------+--------+
+|  1 | A      |    4 | A      |
+|  2 | B      |    5 | B      |
+|  3 | C      | NULL | NULL   |
+|  4 | D      | NULL | NULL   |
+|  5 | E      | NULL | NULL   |
++----+--------+------+--------+
+5 rows in set (0.0919 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right join tablab B on a.nombre = b.nombre;
++------+--------+----+--------+
+| id   | nombre | id | nombre |
++------+--------+----+--------+
+|    1 | A      |  4 | A      |
+|    2 | B      |  5 | B      |
+| NULL | NULL   |  1 | W      |
+| NULL | NULL   |  2 | X      |
+| NULL | NULL   |  3 | Y      |
++------+--------+----+--------+
+5 rows in set (0.0005 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A right join tablab B on a.nombre = b.nombre
+                                            ... where a.nombre is null;
++------+--------+----+--------+
+| id   | nombre | id | nombre |
++------+--------+----+--------+
+| NULL | NULL   |  1 | W      |
+| NULL | NULL   |  2 | X      |
+| NULL | NULL   |  3 | Y      |
++------+--------+----+--------+
+3 rows in set (0.0007 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A left join tablab B on a.nombre = b.nombre
+                                            ... where b.nombre is null;
++----+--------+------+--------+
+| id | nombre | id   | nombre |
++----+--------+------+--------+
+|  3 | C      | NULL | NULL   |
+|  4 | D      | NULL | NULL   |
+|  5 | E      | NULL | NULL   |
++----+--------+------+--------+
+3 rows in set (0.0005 sec)
+
+ MySQL  localhost:3306 ssl  evaluacion_2  SQL > select * from tablaa A left join tablab B on a.nombre = b.nombre where b.nombre is null
+                                            ... union
+                                            ... select * from tablaa A right join tablab B on a.nombre = b.nombre where a.nombre is null;
++------+--------+------+--------+
+| id   | nombre | id   | nombre |
++------+--------+------+--------+
+|    3 | C      | NULL | NULL   |
+|    4 | D      | NULL | NULL   |
+|    5 | E      | NULL | NULL   |
+| NULL | NULL   |    1 | W      |
+| NULL | NULL   |    2 | X      |
+| NULL | NULL   |    3 | Y      |
++------+--------+------+--------+
+6 rows in set (0.0392 sec)
+
+-----------------------------------------------------------------------------------------
+
+
+select b.orderid, a.productname from products a
+
+left join orderdetails b on b.productid = a.productid
+
+where b.productid is null
+
+union
+
+select a.productid, a.productname from products a
+
+right join orderdetails b on b.productid = a.productid
+
+where a.productid is null;
+
+
+
+
+select b.orderid, a.companyname from customers a
+
+left join orders b on a.customerid = b.customerid
+
+where b.customerid is null
+
+union
+ all
+select b.orderid, a.companyname from customers a
+
+right join orders b on a.customerid = b.customerid
+
+where a.customerid is null;
